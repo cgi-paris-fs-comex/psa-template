@@ -1,16 +1,25 @@
 {
-    "name": "PSA Extension",
-    "description" : "Remplis le formulaire PSA Time",
-    "version": "1.0",
-    "manifest_version": 2,
-    "browser_action": {
-      "default_popup": "popup.html",
-      "default_icon": "CGI.png"
-    },
-    "content_scripts": [{
-        "matches": ["<all_urls>"],
-        "js": ["work.js"],
-        "run_at": "document_idle"
-    } ],
-    "content_security_policy": "script-src 'self'; object-src 'self'"
-  }
+  "name": "PSA Extension",
+  "description": "Remplis le formulaire PSA Time",
+  "version": "1.0",
+  "manifest_version": 2,
+  "browser_action": {
+    "default_popup": "popup.html",
+    "default_icon": "CGI.png"
+  },
+  "permissions": [
+    "activeTab"
+  ],
+  "content_scripts": [
+    {
+      "matches": [
+        "<all_urls>"
+      ],
+      "all_frames": true,
+      "js": [
+        "work.js"
+      ]
+    }
+  ],
+  "content_security_policy": "script-src 'self'; object-src 'self'"
+}

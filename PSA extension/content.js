@@ -1,1 +1,0 @@
-console.log("we are on content.js")

@@ -1,37 +1,119 @@
 console.log("on option");
 $(document).ready(function () {
-    displayTemplate();
+    if (localStorage.length != 0) {
+        displayTemplate();
+    }
+
     document.getElementById('submitBtn').addEventListener('click', function () {
 
         var json = jsonConstructor();
         console.log(json)
         storeJson(json);
+        location.reload();
     });
-
+    var lastid;
     function jsonConstructor() {
         var templateName = document.getElementById('templateName').value;
+        var id = 0;
         var time = document.getElementById('time').value;
         var days = ["dimanche", "lundi", "mardi", "mercredi", "jeudi", "vendredi", "samedi"];
+        var category = document.getElementById('select-category').options[document.getElementById('select-category').selectedIndex].value;
+        while (localStorage.getItem(id) != null) {
+            id++;
+        }
+        console.log(id)
         var template = {
             templateName: templateName,
             time: time,
-            location: []
+            location: [],
+            id: id,
+            category: category
         };
         for (var i = 0; i < days.length; i++) {
             var temp = document.getElementById('select-' + days[i]);
-            template.location.push(temp.options[temp.selectedIndex].value);
+            if (category != "1") {
+                template.location.push(temp.options[temp.selectedIndex].value);
+            }
+            else {
+                template.location.push("NA");
+            }
         }
         return JSON.stringify(template);
     }
 
     function storeJson(parameter) {
 
-        localStorage.setItem(0, parameter)
-
+        localStorage.setItem(JSON.parse(parameter).id, parameter)
+        lastid = JSON.parse(parameter).id;
+        console.log(lastid);
     }
     function displayTemplate() {
-        disp = document.getElementById("templatesSummary");
-        disp.innerHTML = "<div><h2>" +  JSON.parse(localStorage.getItem(0)).templateName + "</h2><ul><button id='edit'>edit</button><button id='duplicate'>duplicate</button><button id='delete'>delete</button></ul></div><br>";
+
+        for (var key in localStorage) {
+
+            if (localStorage.getItem(key) != null) {
+                disp = document.getElementById("templatesSummary");
+                disp.innerHTML += "<div><h2>" + JSON.parse(localStorage.getItem(key)).templateName + "</h2><ul><button value='" + JSON.parse(localStorage.getItem(key)).id + "' id='edit'>edit</button><button value='" + JSON.parse(localStorage.getItem(key)).id + "' id='duplicate'>duplicate</button><button value='" + JSON.parse(localStorage.getItem(key)).id + "' id='delete'>delete</button></ul></div><br>";
+            }
+        }
+
+    }
+    $('button').click(function (event) {
+        if (event.target.id == 'delete') {
+            delItem(event.target.value);
+        }
+        if (event.target.id == 'edit') {
+            editItem(event.target.value);
+        }
+        if (event.target.id == "duplicate") {
+            duplicateItem(event.target.value);
+        }
+        location.reload();
+    });
+
+    function delItem(param) {
+        localStorage.removeItem(param);
+    }
+
+    function editItem(param) {
+        var templateName = document.getElementById('templateName').value;
+        var time = document.getElementById('time').value;
+        var days = ["dimanche", "lundi", "mardi", "mercredi", "jeudi", "vendredi", "samedi"];
+        var tempJson = JSON.parse(localStorage.getItem(param));
+        var category = document.getElementById('select-category').options[document.getElementById('select-category').selectedIndex].value;
+        if (templateName != '') {
+            tempJson.templateName = templateName;
+        }
+        if (time != '') {
+            tempJson.time = time;
+        }
+        if (category != 'none') {
+            tempJson.category = category;
+        }
+        for (var i = 0; i < days.length; i++) {
+            var temp = document.getElementById('select-' + days[i]).value;
+            if (category != "1") {
+                if (temp != "S") {
+                    tempJson.location[i] = temp;
+                }
+            }
+            else {
+                tempJson.location[i] = "NA";
+            }
+
+        }
+        localStorage.setItem(tempJson.id, JSON.stringify(tempJson));
+    }
+
+
+    function duplicateItem(param) {
+        var tempJ = JSON.parse(localStorage.getItem(param));
+        id = 0;
+        while (localStorage.getItem(id) != null) {
+            id++;
+        }
+        tempJ.id = id;
+        storeJson(JSON.stringify(tempJ));
+
     }
 });
-

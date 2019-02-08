@@ -2,7 +2,8 @@
 /* Configuration */
 console.log('work');
 var time;
-var locations
+var locations;
+var category;
 
 chrome.runtime.onMessage.addListener(startContentScript);
 
@@ -10,6 +11,7 @@ function startContentScript(message) {
 	console.log(message.time)
 	time = message.time;
 locations = message.location;
+category = message.category;
 
 
 
@@ -56,9 +58,19 @@ locations = message.location;
 	};
 	var updateTimeOnLine = function (line) {
 		console.log('onUpdateTimeOnLine');
-		for (var column = 2; column <= 6; column++) {
-			setValue('TIME', column, line, time);
+		if(category == "proj"){
+			for (var column = 2; column <= 6; column++) {
+				setValue('TIME', column, line, time);
+			}
 		}
+		else{
+			console.log('category=' +category);
+			line=category;
+			for (var column = 2; column <= 6; column++) {
+				setValue('POL_TIME', column, line, time);
+			}
+		}
+		
 	};
 
 	var restTable = $('#UC_EX_TDLY_FR\\$scroll\\$0');
@@ -100,7 +112,7 @@ locations = message.location;
 		var elem = $(id);
 		elem.value = value;
 		console.log(elem.value);
-		//elem.onChange();
+		//elem.onchange();
 	};
 
 	if (timeTable) {

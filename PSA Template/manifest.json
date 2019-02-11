@@ -3,15 +3,18 @@
   "description": "Remplis le formulaire PSA Time",
   "version": "1.1",
   "manifest_version": 2,
-  "browser_action": {
+  "page_action":{
     "default_icon": "CGI.png",
-    "default_popup": "popup.html"
+    "default_popup": "popup.html",
+    "matches": [
+      "https://psa-fs.ent.cgi.com/*"
+    ]
+    
   },
-  "permissions": [
-    "storage",
-    "https://psa-fs.ent.cgi.com/*",
-    "activeTab"
-  ],
+  "background": {
+    "scripts": ["background.js"]
+  },
+  "options_page": "options.html",
   "content_scripts": [
     {
       "matches": [

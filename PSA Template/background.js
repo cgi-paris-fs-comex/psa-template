@@ -1,17 +1,11 @@
 console.log('background running');
 
-chrome.browserAction.onClicked.addListener(submitted);
-function submitted(tab){
-
-    console.log(tab.id);
-
-    let json = {
-        time : "7"
+chrome.extension.onMessage.addListener(
+    function(request, sender, sendResponse) {
+    if (request.message === "activate_icon") {
+        chrome.pageAction.show(sender.tab.id);
     }
-    console.log(json.time);
-
-    chrome.tabs.sendMessage(tab.id,json);
-}
+});
     
 
 

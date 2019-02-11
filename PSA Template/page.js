@@ -2,7 +2,8 @@ chrome.runtime.sendMessage({"message": "activate_icon"});
 /* Configuration */
 console.log('work');
 var time;
-var locations;
+var locations_m;
+var locations_a;
 var category;
 
 chrome.runtime.onMessage.addListener(startContentScript);
@@ -10,7 +11,8 @@ chrome.runtime.onMessage.addListener(startContentScript);
 function startContentScript(message) {
 	console.log(message.time)
 	time = message.time;
-	locations = message.location;
+	locations_m = message.location_m;
+	locations_a = message.location_a;
 	category = message.category;
 
 
@@ -78,10 +80,11 @@ function startContentScript(message) {
 
 	var updateRestLunchLocation = function () {  //methode pour changer la location (cgi, site client...etc)
 		for (var column = 1; column <= 7; column++) {
-			var location = locations[column - 1];
-			updateRestOnColumn(column, location == 'NA' ? 'NA' : 'Y');
-			updateLunchOnColumn(column, location == 'NA' ? 0 : 1);
-			updateLocationOnColumn(column, location);
+			var location_m = locations_m[column - 1];
+			var location_a = locations_a[column - 1];
+			updateRestOnColumn(column, (location_m == 'NA' && location_a == 'NA') ? 'NA' : 'Y');
+			updateLunchOnColumn(column, (location_m == 'NA' && location_a == 'NA') ? 0 : 1);
+			updateLocationOnColumn(column, location_m, location_a);
 		}
 
 		/* Overtime requested by manager */
@@ -102,9 +105,9 @@ function startContentScript(message) {
 		}
 	};
 
-	var updateLocationOnColumn = function (column, value) {
-		setValue('UC_LOCATION_A', column, 0, value);
-		setValue('UC_LOCATION_A', column, 1, value);
+	var updateLocationOnColumn = function (column, value_m, value_a) {
+		setValue('UC_LOCATION_A', column, 0, value_m);
+		setValue('UC_LOCATION_A', column, 1, value_a);
 	};
 
 	var setValue = function (name, column, line, value) {

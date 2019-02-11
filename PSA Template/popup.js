@@ -4,21 +4,36 @@ $(document).ready(function () {
             if (localStorage.getItem(key) != null) {
                 var optionData = getStoredData(key);
                 disp = document.getElementById('savedBtn');
-                var locationTab = [];
+                var locationTab_m = [];
+                var locationTab_a = [];
                 var cat;
-                for (var i = 0; i < optionData.location.length; i++) {
-                    switch (optionData.location[i]) {
+                for (var i = 0; i < optionData.location_m.length; i++) {
+                    switch (optionData.location_m[i]) {
                         case "O":
-                            locationTab.push('CGI');
+                            locationTab_m.push('CGI');
                             break;
                         case "C":
-                            locationTab.push('Client');
+                            locationTab_m.push('Client');
                             break;
                         case "T":
-                            locationTab.push('Teletravail');
+                            locationTab_m.push('Teletravail');
                             break;
                         case "NA":
-                            locationTab.push('N/A');
+                            locationTab_m.push('N/A');
+                            break;
+                    }
+                    switch (optionData.location_a[i]) {
+                        case "O":
+                            locationTab_a.push('CGI');
+                            break;
+                        case "C":
+                            locationTab_a.push('Client');
+                            break;
+                        case "T":
+                            locationTab_a.push('Teletravail');
+                            break;
+                        case "NA":
+                            locationTab_a.push('N/A');
                             break;
                     }
                 }
@@ -174,7 +189,7 @@ $(document).ready(function () {
                         cat = 'jour CET';
                         break;
                 }
-                disp.innerHTML += "<button id='" + optionData.id + "' title='time: " + optionData.time + "h/day| location:" + locationTab + "|category:" + cat + "'>" + optionData.templateName + "</button>";
+                disp.innerHTML += "<button id='" + optionData.id + "' title='time: " + optionData.time + "h/day| location_m:" + locationTab_m + "|location_a:" + locationTab_a + "|category:" + cat + "'>" + optionData.templateName + "</button>";
             }
         }
 

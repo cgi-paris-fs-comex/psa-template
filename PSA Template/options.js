@@ -25,17 +25,21 @@ $(document).ready(function () {
         var template = {
             templateName: templateName,
             time: time,
-            location: [],
+            location_m: [],
+            location_a: [],
             id: id,
             category: category
         };
         for (var i = 0; i < days.length; i++) {
-            var temp = document.getElementById('select-' + days[i]);
+            var temp_m = document.getElementById('select-' + days[i]+'-m');
+            var temp_a = document.getElementById('select-' + days[i]+'-a');
             if (category == "proj" || category == "2" || category == "14" || category == "21" || category == "22" || category == "23" || category == "24" || category == "25" || category == "26" || category == "39" || category == "40" || category == "44" || category == "47" || category == "48") {
-                template.location.push(temp.options[temp.selectedIndex].value);
+                template.location_m.push(temp_m.options[temp_m.selectedIndex].value);
+                template.location_a.push(temp_a.options[temp_a.selectedIndex].value);
             }
             else {
-                template.location.push("NA");
+                template.location_m.push("NA");
+                template.location_a.push("NA");
             }
         }
         return JSON.stringify(template);
@@ -91,14 +95,19 @@ $(document).ready(function () {
             tempJson.category = category;
         }
         for (var i = 0; i < days.length; i++) {
-            var temp = document.getElementById('select-' + days[i]).value;
-            if (category != "1") {
-                if (temp != "S") {
-                    tempJson.location[i] = temp;
+            var temp_m = document.getElementById('select-' + days[i]+'-m').value;
+            var temp_a = document.getElementById('select-' + days[i]+'-a').value;
+            if (category == "proj" || category == "2" || category == "14" || category == "21" || category == "22" || category == "23" || category == "24" || category == "25" || category == "26" || category == "39" || category == "40" || category == "44" || category == "47" || category == "48") {
+                if (temp_m != "S") {
+                    tempJson.location_m[i] = temp_m;
+                }
+                if (temp_a != "S") {
+                    tempJson.location_a[i] = temp_a;
                 }
             }
             else {
-                tempJson.location[i] = "NA";
+                tempJson.location_m[i] = "NA";
+                tempJson.location_a[i] = "NA";
             }
 
         }

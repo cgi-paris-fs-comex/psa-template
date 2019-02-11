@@ -31,7 +31,7 @@ $(document).ready(function () {
         };
         for (var i = 0; i < days.length; i++) {
             var temp = document.getElementById('select-' + days[i]);
-            if (category != "1") {
+            if (category == "proj" || category == "2" || category == "14" || category == "21" || category == "22" || category == "23" || category == "24" || category == "25" || category == "26" || category == "39" || category == "40" || category == "44" || category == "47" || category == "48") {
                 template.location.push(temp.options[temp.selectedIndex].value);
             }
             else {

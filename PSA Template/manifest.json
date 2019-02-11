@@ -8,12 +8,14 @@
     "default_popup": "popup.html"
   },
   "permissions": [
-    "storage"
+    "storage",
+    "https://psa-fs.ent.cgi.com/*",
+    "activeTab"
   ],
   "content_scripts": [
     {
       "matches": [
-        "<all_urls>"
+        "https://psa-fs.ent.cgi.com/*"
       ],
       "all_frames": true,
       "js": [

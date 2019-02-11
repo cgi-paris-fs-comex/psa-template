@@ -51,7 +51,7 @@ function startContentScript(message) {
 
 	/* TIMETABLE */
 	var timeTable = $('#l0EX_TIME_DTL\\$0');
-
+	
 	var updateTime = function () {
 		console.log('onUpdateTime');
 		updateTimeOnLine(0);
@@ -74,6 +74,7 @@ function startContentScript(message) {
 	};
 
 	var restTable = $('#UC_EX_TDLY_FR\\$scroll\\$0');
+	console.log("restable= "+restTable)
 
 	var updateRestLunchLocation = function () {  //methode pour changer la location (cgi, site client...etc)
 		for (var column = 1; column <= 7; column++) {
@@ -117,13 +118,12 @@ function startContentScript(message) {
 		if((elem)[0]){
 			$(elem)[0].dispatchEvent(changeEvent);
 		}
-		//elem.onchange();
 	};
 
-	if (timeTable) {
+	if (timeTable.length!=0 && restTable.length!=1) {
 		updateTime();
 	}
-	if (restTable) {
+	if (restTable.length!=0) {
 		updateRestLunchLocation();
 	}
 

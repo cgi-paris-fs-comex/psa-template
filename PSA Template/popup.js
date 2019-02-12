@@ -1,4 +1,5 @@
 $(document).ready(function () {
+    /* Display all templates */
     function displayBtn() {
         for (var key in localStorage) {
             if (localStorage.getItem(key) != null) {
@@ -192,17 +193,15 @@ $(document).ready(function () {
                 disp.innerHTML += "<button id='" + optionData.id + "' title='time: " + optionData.time + "h/day| location_m:" + locationTab_m + "|location_a:" + locationTab_a + "|category:" + cat + "'>" + optionData.templateName + "</button>";
             }
         }
-
     }
     displayBtn();
+    /* Send the templates informations to page.js */
     $('button').click(function (event) {
-        console.log('click !');
         chrome.tabs.query({
             currentWindow: true,
             active: true
         }, function (tabs) {
-            console.log(event.target.id);
-            var optionData = getStoredData(event.target.id);
+            var optionData = JSON.parse(localStorage.getItem(event.target.id));
             tabs.forEach(function (tab) {
                 console.log('sending message to ' + tab.id);
                 chrome.tabs.sendMessage(tab.id, optionData, function () {
@@ -211,9 +210,4 @@ $(document).ready(function () {
             });
         });
     });
-
 });
-
-function getStoredData(key) {
-    return JSON.parse(localStorage.getItem(key));
-}

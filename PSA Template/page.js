@@ -1,6 +1,5 @@
-chrome.runtime.sendMessage({"message": "activate_icon"});
+chrome.runtime.sendMessage({ "message": "activate_icon" });
 /* Configuration */
-console.log('work');
 var time;
 var locations_m;
 var locations_a;
@@ -9,26 +8,10 @@ var category;
 chrome.runtime.onMessage.addListener(startContentScript);
 
 function startContentScript(message) {
-	console.log(message.time)
 	time = message.time;
 	locations_m = message.location_m;
 	locations_a = message.location_a;
 	category = message.category;
-
-
-
-
-
-	//var localSunday = documents.getElementById('');
-	//var locations = [ /* C : Client, O : CGI, T : Télétravail, NA : N/A */
-	//'NA', /* Dimanche */
-	//'O', /* Lundi */
-	//'O', /* Mardi */
-	//'O', /* Mercredi */
-	//'O', /* Jeudi */
-	//'O', /* Vendredi */
-	//'NA' /* Samedi */
-	//	];
 
 	/* Code */
 
@@ -37,23 +20,10 @@ function startContentScript(message) {
 	for (var iframeIndex = 0; iframeIndex < iframes.length; iframeIndex++) {
 		documents.push(iframes[iframeIndex].contentDocument);
 	}
-	/*var $ = function (selector) {
-		selector = selector.substr(1).replace(/\\\$/g, '$');
-		console.log(selector);
-		for (var documentIndex = 0; documentIndex < documents.length; documentIndex++) {
-			var elem = documents[documentIndex].getElementById(selector);
-			if (elem) {
-				return elem;
-			}
-		}
-		console.log('not found');
-		return null;
-	};*/
-	console.log(documents);
 
 	/* TIMETABLE */
 	var timeTable = $('#l0EX_TIME_DTL\\$0');
-	
+
 	var updateTime = function () {
 		console.log('onUpdateTime');
 		updateTimeOnLine(0);
@@ -66,7 +36,6 @@ function startContentScript(message) {
 			}
 		}
 		else {
-			console.log('category=' + category);
 			line = category;
 			for (var column = 2; column <= 6; column++) {
 				setValue('POL_TIME', column, line, time);
@@ -76,7 +45,6 @@ function startContentScript(message) {
 	};
 
 	var restTable = $('#UC_EX_TDLY_FR\\$scroll\\$0');
-	console.log("restable= "+restTable)
 
 	var updateRestLunchLocation = function () {  //methode pour changer la location (cgi, site client...etc)
 		for (var column = 1; column <= 7; column++) {
@@ -112,21 +80,19 @@ function startContentScript(message) {
 
 	var setValue = function (name, column, line, value) {
 		var id = '#' + name + column + '\\$' + line;
-		console.log("test" + id);
 		var elem = $(id);
 		elem.val(value);
-		console.log(elem.value);
 		var changeEvent = document.createEvent("HTMLEvents");
 		changeEvent.initEvent("change", true, true);
-		if((elem)[0]){
+		if ((elem)[0]) {
 			$(elem)[0].dispatchEvent(changeEvent);
 		}
 	};
 
-	if (timeTable.length!=0 && restTable.length!=1) {
+	if (timeTable.length != 0 && restTable.length != 1) {
 		updateTime();
 	}
-	if (restTable.length!=0) {
+	if (restTable.length != 0) {
 		updateRestLunchLocation();
 	}
 

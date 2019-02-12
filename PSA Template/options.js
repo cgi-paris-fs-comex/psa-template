@@ -3,8 +3,9 @@ $(document).ready(function () {
     if (localStorage.length != 0) {
         displayTemplate();
     }
+    var days = ["dimanche", "lundi", "mardi", "mercredi", "jeudi", "vendredi", "samedi"];
+    /* change the location to 'N/A' if an absence category is selected */
     document.getElementById('select-category').addEventListener('change', function () {
-        var days = ["dimanche", "lundi", "mardi", "mercredi", "jeudi", "vendredi", "samedi"];
         var category = document.getElementById('select-category').options[document.getElementById('select-category').selectedIndex].value;
         for (var i = 0; i < days.length; i++) {
             var temp_m = document.getElementById('select-' + days[i] + '-m');
@@ -19,24 +20,21 @@ $(document).ready(function () {
             }
         }
     });
+    /* Save the template */
     document.getElementById('submitBtn').addEventListener('click', function () {
-
         var json = jsonConstructor();
-        console.log(json)
         storeJson(json);
         location.reload();
     });
-    var lastid;
+    /* Create the JSON with all templates informations */
     function jsonConstructor() {
         var templateName = document.getElementById('templateName').value;
         var id = 0;
         var time = document.getElementById('time').value;
-        var days = ["dimanche", "lundi", "mardi", "mercredi", "jeudi", "vendredi", "samedi"];
         var category = document.getElementById('select-category').options[document.getElementById('select-category').selectedIndex].value;
         while (localStorage.getItem(id) != null) {
             id++;
         }
-        console.log(id)
         var template = {
             templateName: templateName,
             time: time,
@@ -53,27 +51,23 @@ $(document).ready(function () {
         }
         return JSON.stringify(template);
     }
-
+    /* Store the JSON in LocalStorage to keep it saved inside the extension */
     function storeJson(parameter) {
-
         localStorage.setItem(JSON.parse(parameter).id, parameter)
-        lastid = JSON.parse(parameter).id;
-        console.log(lastid);
     }
+    /* Display templates in option */
     function displayTemplate() {
-
         for (var key in localStorage) {
-
             if (localStorage.getItem(key) != null) {
                 disp = document.getElementById("templatesSummary");
                 disp.innerHTML += "<div><h2>" + JSON.parse(localStorage.getItem(key)).templateName + "</h2><ul><button value='" + JSON.parse(localStorage.getItem(key)).id + "' id='edit'>edit</button><button value='" + JSON.parse(localStorage.getItem(key)).id + "' id='duplicate'>duplicate</button><button value='" + JSON.parse(localStorage.getItem(key)).id + "' id='delete'>delete</button></ul></div><br>";
             }
         }
-
     }
+    /* Run fuction after a click of an edit/delete/duplicate button */
     $('button').click(function (event) {
         if (event.target.id == 'delete') {
-            delItem(event.target.value);
+            localStorage.removeItem(event.target.value); //Delete function
             location.reload();
         }
         if (event.target.id == 'edit') {
@@ -85,13 +79,8 @@ $(document).ready(function () {
             location.reload();
         }
     });
-
-    function delItem(param) {
-        localStorage.removeItem(param);
-    }
-
+    /* Edit to modify a template */
     function editItem(param) {
-        var days = ["dimanche", "lundi", "mardi", "mercredi", "jeudi", "vendredi", "samedi"];
         var tempJson = JSON.parse(localStorage.getItem(param));
         document.getElementById('templateName').value = tempJson.templateName;
         document.getElementById('time').value = tempJson.time;
@@ -102,9 +91,7 @@ $(document).ready(function () {
             temp_m.value = tempJson.location_m[i];
             temp_a.value = tempJson.location_a[i];
         }
-
         document.getElementById("edit2").addEventListener('click', function () {
-
             var templateName = document.getElementById('templateName').value;
             var time = document.getElementById('time').value;
             var category = document.getElementById('select-category').options[document.getElementById('select-category').selectedIndex].value;
@@ -121,8 +108,7 @@ $(document).ready(function () {
             location.reload();
         });
     }
-
-
+    /* Duplicate the template */
     function duplicateItem(param) {
         var tempJ = JSON.parse(localStorage.getItem(param));
         tempJ.templateName = tempJ.templateName+"-copy";

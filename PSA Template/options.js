@@ -125,6 +125,7 @@ $(document).ready(function () {
 
     function duplicateItem(param) {
         var tempJ = JSON.parse(localStorage.getItem(param));
+        tempJ.templateName = tempJ.templateName+"-copy";
         id = 0;
         while (localStorage.getItem(id) != null) {
             id++;

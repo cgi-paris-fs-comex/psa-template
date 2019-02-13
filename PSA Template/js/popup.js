@@ -10,11 +10,11 @@ $(document).ready(function () {
                 var cat;
                 for (var i = 0; i < options.location_morn.length; i++) {
                     for (var j = 0; j < locations.length - 1; j++) {
-                        if (options.location_morn[i] == locations[j + 1].value) {
-                            locationTab_morn.push(locations[j + 1].label);
+                        if (options.location_morn[i] == locations[j].value) {
+                            locationTab_morn.push(locations[j].label);
                         }
-                        if (options.location_after[i] == locations[j + 1].value) {
-                            locationTab_after.push(locations[j + 1].label);
+                        if (options.location_after[i] == locations[j].value) {
+                            locationTab_after.push(locations[j].label);
                         }
                     }
                 }

@@ -8,10 +8,10 @@ var category;
 chrome.runtime.onMessage.addListener(startContentScript);
 
 function startContentScript(message) {
-	time = message.time;
+	time = message.time[0].value;
 	locations_morn = message.location_morn;
 	locations_after = message.location_after;
-	category = message.category;
+	category = message.time[1].value;
 
 	/* Code */
 
@@ -26,19 +26,21 @@ function startContentScript(message) {
 
 	var updateTime = function () {
 		console.log('onUpdateTime');
-		updateTimeOnLine(0);
+		updateTimeOnLine();
 	};
-	var updateTimeOnLine = function (line) {
+	var updateTimeOnLine = function () {
 		console.log('onUpdateTimeOnLine');
-		if (category == "-1") {
-			for (var column = 2; column <= 6; column++) {
-				setValue('TIME', column, line, time);
-			}
-		}
-		else {
-			line = category;
-			for (var column = 2; column <= 6; column++) {
-				setValue('POL_TIME', column, line, time);
+		for (var i = 1; i < category.length-1; i++) {
+			for (var j = 0; j < category[i].length; j++) {
+				if (category[i][j] == "-1") {
+
+					setValue('TIME', i+1, 0, time[i][j]);
+
+				}
+				else {
+					setValue('POL_TIME', i+1, category[i][j], time[i][j]);
+
+				}
 			}
 		}
 

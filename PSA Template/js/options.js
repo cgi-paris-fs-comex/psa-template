@@ -3,16 +3,16 @@ $(document).ready(function () {
     if (localStorage.length != 0) {
         displayTemplate();
     }
-    function initCatTable(){
+    function initCatTable() {
         var table = "<tr><th></th>";
         for (var i = 0; i < days.length; i++) {
             table += "<th>" + days[i] + "</th>";
         }
         table += "</tr>";
-        for( var i = 0; i < categories.length;i++){
-            table +="<tr><td>"+categories[i]+"</td>";
-            for(var j = 0; j < 7;j++){
-                table += "<td><input type='text' id='C"+(i-1)+"D"+(j+1)+"' value=' '></td>";
+        for (var i = 0; i < categories.length; i++) {
+            table += "<tr><td>" + categories[i] + "</td>";
+            for (var j = 0; j < 7; j++) {
+                table += "<td><input type='text' id='C" + (i - 1) + "D" + (j + 1) + "' value=' '></td>";
             }
             table += "</tr>";
         }
@@ -47,18 +47,18 @@ $(document).ready(function () {
         table += "</tr><tr>";
         for (var i = 0; i < days.length; i++) {
             table += "<td> <select id='select-" + days[i] + "-morning'>";
-            for (var j = 0; j < locations.length; j++) {
+            for (var j = 0; j < locations.length - 1; j++) {
                 table += "<option value='" + locations[j].value + "'>" + locations[j].label + "</option>";
             }
-            table += "</select></td>";
+            table += "<option selected value='" + locations[3].value + "'>" + locations[3].label + "</option></select></td>";
         }
         table += "</tr><tr>";
         for (var i = 0; i < days.length; i++) {
             table += "<td> <select id='select-" + days[i] + "-afternoon'>";
-            for (var j = 0; j < locations.length; j++) {
+            for (var j = 0; j < locations.length - 1; j++) {
                 table += "<option value='" + locations[j].value + "'>" + locations[j].label + "</option>";
             }
-            table += "</select></td>";
+            table += "<option selected value='" + locations[3].value + "'>" + locations[3].label + "</option></select></td>";
         }
         table += "</tr>";
         $('#locationTable')[0].innerHTML = table;
@@ -75,8 +75,6 @@ $(document).ready(function () {
             var temp_after = $('#select-' + days[i] + '-afternoon')[0];
             for (var j = 0; j < nonAbs.length; j++) {
                 if (category == nonAbs[j]) {
-                    temp_morn.value = "S";
-                    temp_after.value = "S";
                     break;
                 }
                 else {
@@ -90,7 +88,7 @@ $(document).ready(function () {
     $('#submitBtn').click(function () {
         var json = jsonConstructor();
         storeJson(json);
-        location.reload();
+        //location.reload();
     });
     /* Create the JSON with all templates informations */
     function jsonConstructor() {
@@ -102,7 +100,10 @@ $(document).ready(function () {
         }
         var template = {
             templateName: templateName,
-            time: [],
+            time: [
+                { name: 'tabTime', value: [] },
+                { name: 'tabCat', value: [] }
+            ],
             location_morn: [],
             location_after: [],
             id: id,
@@ -110,22 +111,22 @@ $(document).ready(function () {
         };
         for (var i = 0; i < days.length; i++) {
             var interTab = [];
-            for(var j= (-1);j<categories.length;j++){
-                var strj = j.toString();
-                var stri = i.toString();
-                console.log(document.getElementById("C-1D0"));
-                if(document.getElementById('C'+j+'D'+i) != null){
-                    interTab.push(document.getElementById('C'+j+'D'+i).value);
+            var interTabCat = [];
+            for (var j = (-1); j < categories.length - 1; j++) {
+                var k = i + 1;
+                if ($("#C" + j + "D" + k)[0].value != " ") {
+                    interTab.push($("#C" + j + "D" + k)[0].value);
+                    interTabCat.push(j);
                 }
             }
-            console.log(interTab);
-            template.time.push(interTab);
+            template.time[0].value.push(interTab);
+            template.time[1].value.push(interTabCat);
             var temp_morn = $('#select-' + days[i] + '-morning')[0];
             var temp_after = $('#select-' + days[i] + '-afternoon')[0];
             template.location_morn.push(temp_morn.options[temp_morn.selectedIndex].value);
             template.location_after.push(temp_after.options[temp_after.selectedIndex].value);
         }
-        console.log(template.time);
+        console.log(template.time[1].value);
         return JSON.stringify(template);
     }
     /* Store the JSON in LocalStorage to keep it saved inside the extension */
@@ -160,9 +161,14 @@ $(document).ready(function () {
     function editItem(param) {
         var tempJson = JSON.parse(localStorage.getItem(param));
         $('#templateName')[0].value = tempJson.templateName;
-        $('#time')[0].value = tempJson.time;
         $('#select-category')[0].value = tempJson.category;
         for (var i = 0; i < days.length; i++) {
+            for (var j = (-1); j < categories.length - 1; j++) {
+                var k = i + 1;
+                if (tempJson.time[0].value[i][j] != undefined) {
+                    $("#C" + j + "D" + k)[0].value = tempJson.time[0].value[i][j];
+                }
+            }
             var temp_morn = $('#select-' + days[i] + '-morning')[0];
             var temp_after = $('#select-' + days[i] + '-afternoon')[0];
             temp_morn.value = tempJson.location_morn[i];
@@ -176,6 +182,17 @@ $(document).ready(function () {
             tempJson.time = time;
             tempJson.category = category;
             for (var i = 0; i < days.length; i++) {
+                var interTab = [];
+                var interTabCat = [];
+                for (var j = (-1); j < categories.length - 1; j++) {
+                    var k = i + 1;
+                    if ($("#C" + j + "D" + k)[0].value != " ") {
+                        interTab.push($("#C" + j + "D" + k)[0].value);
+                        interTabCat.push(j);
+                    }
+                }
+                template.time[0].value[i] = interTab;
+                template.time[1].value[i] = interTabCat;
                 var temp_morn = $('#select-' + days[i] + '-morning')[0].value;
                 var temp_after = $('#select-' + days[i] + '-afternoon')[0].value;
                 tempJson.location_morn[i] = temp_morn;

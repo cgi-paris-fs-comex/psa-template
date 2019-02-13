@@ -31,16 +31,16 @@ $(document).ready(function () {
         table += "</tr><tr>";
         for (var i = 0; i < days.length; i++) {
             table += "<td> <select id='select-" + days[i] + "-morning'>";
-            for (var j = 0; j < locationVal.length; j++) {
-                table += "<option value='" + locationVal[j] + "'>" + locationDispl[j] + "</option>";
+            for (var j = 0; j < locations.length; j++) {
+                table += "<option value='" + locations[j].value + "'>" + locations[j].label + "</option>";
             }
             table += "</select></td>";
         }
         table += "</tr><tr>";
         for (var i = 0; i < days.length; i++) {
             table += "<td> <select id='select-" + days[i] + "-afternoon'>";
-            for (var j = 0; j < locationVal.length; j++) {
-                table += "<option value='" + locationVal[j] + "'>" + locationDispl[j] + "</option>";
+            for (var j = 0; j < locations.length; j++) {
+                table += "<option value='" + locations[j].value + "'>" + locations[j].label + "</option>";
             }
             table += "</select></td>";
         }

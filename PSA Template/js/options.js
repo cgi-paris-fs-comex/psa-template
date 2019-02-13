@@ -88,13 +88,12 @@ $(document).ready(function () {
     $('#submitBtn').click(function () {
         var json = jsonConstructor();
         storeJson(json);
-        //location.reload();
+        location.reload();
     });
     /* Create the JSON with all templates informations */
     function jsonConstructor() {
         var templateName = $('#templateName')[0].value;
         var id = 0;
-        //var category = $('#select-category')[0].options[$('#select-category')[0].selectedIndex].value;
         while (localStorage.getItem(id) != null) {
             id++;
         }

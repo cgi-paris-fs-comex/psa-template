@@ -30,6 +30,7 @@ $(document).ready(function () {
         for (var i = 0; i < days.length; i++) {
             table += "<td> <select id='select-" + days[i] + "-morning'>";
             for (var j = 0; j < locations.length - 1; j++) {
+
                 table += "<option value='" + locations[j].value + "'>" + locations[j].label + "</option>";
             }
             table += "<option selected value='" + locations[3].value + "'>" + locations[3].label + "</option></select></td>";
@@ -37,6 +38,7 @@ $(document).ready(function () {
         table += "</tr><tr>";
         for (var i = 0; i < days.length; i++) {
             table += "<td> <select id='select-" + days[i] + "-afternoon'>";
+
             for (var j = 0; j < locations.length - 1; j++) {
                 table += "<option value='" + locations[j].value + "'>" + locations[j].label + "</option>";
             }

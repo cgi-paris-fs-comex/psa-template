@@ -48,8 +48,8 @@ function startContentScript(message) {
 
 	var updateRestLunchLocation = function () {  //methode pour changer la location (cgi, site client...etc)
 		for (var column = 1; column <= 7; column++) {
-			var location_m = locations_m[column - 1];
-			var location_a = locations_a[column - 1];
+			var location_morn = locations_morn[column - 1];
+			var location_after = locations_after[column - 1];
 			updateRestOnColumn(column, (location_morn == 'NA' && location_after == 'NA') ? 'NA' : 'Y');
 			updateLunchOnColumn(column, (location_morn == 'NA' && location_after == 'NA') ? 0 : 1);
 			updateLocationOnColumn(column, location_morn, location_after);

@@ -30,7 +30,7 @@ function startContentScript(message) {
 	};
 	var updateTimeOnLine = function (line) {
 		console.log('onUpdateTimeOnLine');
-		if (category == "proj") {
+		if (category == "-1") {
 			for (var column = 2; column <= 6; column++) {
 				setValue('TIME', column, line, time);
 			}

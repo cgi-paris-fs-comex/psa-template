@@ -3,6 +3,22 @@ $(document).ready(function () {
     if (localStorage.length != 0) {
         displayTemplate();
     }
+    function initCatTable(){
+        var table = "<tr><th></th>";
+        for (var i = 0; i < days.length; i++) {
+            table += "<th>" + days[i] + "</th>";
+        }
+        table += "</tr>";
+        for( var i = 0; i < categories.length;i++){
+            table +="<tr><td>"+categories[i]+"</td>";
+            for(var j = 0; j < 7;j++){
+                table += "<td><input type='text' id='C"+(i-1)+"D"+(j+1)+"' value=' '></td>";
+            }
+            table += "</tr>";
+        }
+        $('#categoryTable')[0].innerHTML = table;
+    }
+
     /*intialise category selector */
     function initCat() {
         var options = $('#select-category')[0];
@@ -47,8 +63,8 @@ $(document).ready(function () {
         table += "</tr>";
         $('#locationTable')[0].innerHTML = table;
     }
+    initCatTable()
     intitLocation();
-    initCat();
 
     /* change the location to 'N/A' if an absence category is selected */
     $('#select-category').change(function () {
@@ -80,25 +96,36 @@ $(document).ready(function () {
     function jsonConstructor() {
         var templateName = $('#templateName')[0].value;
         var id = 0;
-        var time = $('#time')[0].value;
-        var category = $('#select-category')[0].options[$('#select-category')[0].selectedIndex].value;
+        //var category = $('#select-category')[0].options[$('#select-category')[0].selectedIndex].value;
         while (localStorage.getItem(id) != null) {
             id++;
         }
         var template = {
             templateName: templateName,
-            time: time,
+            time: [],
             location_morn: [],
             location_after: [],
             id: id,
-            category: category
+            //category: category
         };
         for (var i = 0; i < days.length; i++) {
+            var interTab = [];
+            for(var j= (-1);j<categories.length;j++){
+                var strj = j.toString();
+                var stri = i.toString();
+                console.log(document.getElementById("C-1D0"));
+                if(document.getElementById('C'+j+'D'+i) != null){
+                    interTab.push(document.getElementById('C'+j+'D'+i).value);
+                }
+            }
+            console.log(interTab);
+            template.time.push(interTab);
             var temp_morn = $('#select-' + days[i] + '-morning')[0];
             var temp_after = $('#select-' + days[i] + '-afternoon')[0];
             template.location_morn.push(temp_morn.options[temp_morn.selectedIndex].value);
             template.location_after.push(temp_after.options[temp_after.selectedIndex].value);
         }
+        console.log(template.time);
         return JSON.stringify(template);
     }
     /* Store the JSON in LocalStorage to keep it saved inside the extension */

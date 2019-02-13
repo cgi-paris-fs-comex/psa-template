@@ -18,7 +18,6 @@ $(document).ready(function () {
                         }
                     }
                 }
-
                 for (var i = 0; i < categories.length; i++) {
                     if (options.category == "proj") {
                         cat = categories[1];

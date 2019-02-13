@@ -9,12 +9,12 @@ $(document).ready(function () {
                 var locationTab_after = [];
                 var cat;
                 for (var i = 0; i < options.location_morn.length; i++) {
-                    for (var j = 0; j < locationVal.length - 1; j++) {
-                        if (options.location_morn[i] == locationVal[j + 1]) {
-                            locationTab_morn.push(locationDispl[j + 1]);
+                    for (var j = 0; j < locations.length - 1; j++) {
+                        if (options.location_morn[i] == locations[j + 1].value) {
+                            locationTab_morn.push(locations[j + 1].label);
                         }
-                        if (options.location_after[i] == locationVal[j + 1]) {
-                            locationTab_after.push(locationDispl[j + 1]);
+                        if (options.location_after[i] == locations[j + 1].value) {
+                            locationTab_after.push(locations[j + 1].label);
                         }
                     }
                 }

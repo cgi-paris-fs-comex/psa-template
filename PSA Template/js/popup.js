@@ -9,8 +9,9 @@ $(document).ready(function () {
                     var locationTab_morn = [];
                     var locationTab_after = [];
                     var cat = [];
+                    var time = options.time[0].value;
                     for (var i = 0; i < options.location_morn.length; i++) {
-                        for (var j = 0; j < locations.length - 1; j++) {
+                        for (var j = 0; j < locations.length; j++) {
                             if (options.location_morn[i] == locations[j].value) {
                                 locationTab_morn.push(locations[j].label);
                             }
@@ -20,24 +21,28 @@ $(document).ready(function () {
                         }
                     }
                     for (var j = 0; j < options.time[1].value.length; j++) {
-                        if (options.time[1].value[j].length > 1) {
-                            for (var k = 0; k < options.time[1].value[j].length; k++) {
+                        for (var k = 0; k < options.time[1].value[j].length; k++) {
+                            var a = 0;
+                            for(var i = 0;i<cat.length;i++){
+                                if(cat[i] == categories[options.time[1].value[j][k] + 1]){
+                                    break;
+                                }
+                                else{
+                                    a++
+                                }
+                            }
+                            if(a == cat.length){
                                 cat.push(categories[options.time[1].value[j][k] + 1]);
                             }
                         }
-                        else {
-                            cat.push(categories[options.time[1].value[j][0] + 1]);
-                        }
                     }
-
-
-
                 }
-                disp.innerHTML += "<button id='" + options.id + "' title='time: h/day| location_morn:" + locationTab_morn + "|location_afer:" + locationTab_after + "|category:" + cat + "'>" + options.templateName + "</button>";
+
+                disp.innerHTML += "<button id='" + options.id + "' title='time: Sun:"+time[0]+"h Mon:"+time[1]+"h Tue:"+time[2]+"h Wed:"+time[3]+"h Thu:"+time[4]+"h Fri:"+time[5]+"h Sat:"+time[6]+"h| location_morn:" + locationTab_morn + "|location_afer:" + locationTab_after + "|category:" + cat + "'>" + options.templateName + "</button>";
 
             }
-
         }
+
     }
 
 

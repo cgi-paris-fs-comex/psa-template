@@ -3,6 +3,7 @@ $(document).ready(function () {
     if (localStorage.length != 0) {
         displayTemplate();
     }
+    /*function that initialize the table */
     function initCatTable() {
         var table = "<tr><th></th>";
         for (var i = 0; i < days.length; i++) {
@@ -12,32 +13,13 @@ $(document).ready(function () {
         for (var i = 0; i < categories.length; i++) {
             table += "<tr><td>" + categories[i] + "</td>";
             for (var j = 0; j < 7; j++) {
-                table += "<td><input type='text' id='C" + (i - 1) + "D" + (j + 1) + "' value=' '></td>";
+                table += "<td><input type='text' id='C" + (i - 1) + "D" + (j + 1) + "'></td>";
             }
             table += "</tr>";
         }
         $('#categoryTable')[0].innerHTML = table;
     }
 
-    /*intialise category selector */
-    function initCat() {
-        var options = $('#select-category')[0];
-        for (var i = 0; i < categories.length; i++) {
-            if (i == 0) {
-                options.innerHTML += "<option value='none'>" + categories[i] + "</option>";
-            }
-            else {
-                if (i == 1) {
-                    options.innerHTML += "<option value='proj'>" + categories[i] + "</option>";
-                }
-                else {
-                    var val = i - 2;
-                    options.innerHTML += "<option value='" + val + "'>" + categories[i] + "</option>";
-                }
-            }
-
-        }
-    }
     /*initialise location table */
     function intitLocation() {
         var table = "<tr>";
@@ -66,24 +48,6 @@ $(document).ready(function () {
     initCatTable()
     intitLocation();
 
-    /* change the location to 'N/A' if an absence category is selected */
-    $('#select-category').change(function () {
-        var category = $('#select-category')[0].options[$('#select-category')[0].selectedIndex].value;
-        var nonAbs = ["proj", "2", "14", "21", "22", "23", "24", "25", "26", "39", "40", "44", "47", "48"];
-        for (var i = 0; i < days.length; i++) {
-            var temp_morn = $('#select-' + days[i] + '-morning')[0];
-            var temp_after = $('#select-' + days[i] + '-afternoon')[0];
-            for (var j = 0; j < nonAbs.length; j++) {
-                if (category == nonAbs[j]) {
-                    break;
-                }
-                else {
-                    temp_morn.value = "NA";
-                    temp_after.value = "NA";
-                }
-            }
-        }
-    });
     /* Save the template */
     $('#submitBtn').click(function () {
         var json = jsonConstructor();
@@ -106,16 +70,17 @@ $(document).ready(function () {
             location_morn: [],
             location_after: [],
             id: id,
-            //category: category
         };
         for (var i = 0; i < days.length; i++) {
             var interTab = [];
             var interTabCat = [];
             for (var j = (-1); j < categories.length - 1; j++) {
                 var k = i + 1;
-                if ($("#C" + j + "D" + k)[0].value != " ") {
+                var l = j;
+                if ($("#C" + j + "D" + k)[0].value != '') {
                     interTab.push($("#C" + j + "D" + k)[0].value);
-                    interTabCat.push(j);
+                    interTabCat.push(l);
+                    l=j-1;
                 }
             }
             template.time[0].value.push(interTab);
@@ -125,7 +90,6 @@ $(document).ready(function () {
             template.location_morn.push(temp_morn.options[temp_morn.selectedIndex].value);
             template.location_after.push(temp_after.options[temp_after.selectedIndex].value);
         }
-        console.log(template.time[1].value);
         return JSON.stringify(template);
     }
     /* Store the JSON in LocalStorage to keep it saved inside the extension */
@@ -160,12 +124,15 @@ $(document).ready(function () {
     function editItem(param) {
         var tempJson = JSON.parse(localStorage.getItem(param));
         $('#templateName')[0].value = tempJson.templateName;
-        $('#select-category')[0].value = tempJson.category;
         for (var i = 0; i < days.length; i++) {
-            for (var j = (-1); j < categories.length - 1; j++) {
-                var k = i + 1;
-                if (tempJson.time[0].value[i][j] != undefined) {
-                    $("#C" + j + "D" + k)[0].value = tempJson.time[0].value[i][j];
+            for (var j = 0; j < categories.length ; j++) {
+                if (tempJson.time[0].value[i][j-1] != undefined) {
+                    for(var k = 0; k<tempJson.time[1].value.length;k++ ){
+                        for(var l =0; l<tempJson.time[1].value[k].length;l++){
+                            $("#C" + tempJson.time[1].value[k][l] + "D" + (k+1))[0].value = tempJson.time[0].value[i][j-1];
+                        }
+                    }
+                   
                 }
             }
             var temp_morn = $('#select-' + days[i] + '-morning')[0];
@@ -181,9 +148,11 @@ $(document).ready(function () {
                 var interTabCat = [];
                 for (var j = (-1); j < categories.length - 1; j++) {
                     var k = i + 1;
-                    if ($("#C" + j + "D" + k)[0].value != " ") {
+                    var l = j;
+                    if ($("#C" + j + "D" + k)[0].value != '') {
                         interTab.push($("#C" + j + "D" + k)[0].value);
-                        interTabCat.push(j);
+                        interTabCat.push(l);
+                        l=j-1;
                     }
                 }
                 tempJson.time[0].value[i] = interTab;

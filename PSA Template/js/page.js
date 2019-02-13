@@ -30,7 +30,7 @@ function startContentScript(message) {
 	};
 	var updateTimeOnLine = function () {
 		console.log('onUpdateTimeOnLine');
-		for (var i = 1; i < category.length-1; i++) {
+		for (var i = 0; i < category.length; i++) {
 			for (var j = 0; j < category[i].length; j++) {
 				if (category[i][j] == "-1") {
 

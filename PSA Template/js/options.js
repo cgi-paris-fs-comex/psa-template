@@ -59,8 +59,6 @@ $(document).ready(function () {
             var temp_after = $('#select-' + days[i] + '-afternoon')[0];
             for (var j = 0; j < nonAbs.length; j++) {
                 if (category == nonAbs[j]) {
-                    temp_morn.value = "S";
-                    temp_after.value = "S";
                     break;
                 }
                 else {

@@ -176,11 +176,7 @@ $(document).ready(function () {
         }
         $('#edit2').click(function () {
             var templateName = $('#templateName')[0].value;
-            var time = $('#time')[0].value;
-            var category = $('#select-category')[0].options[$('#select-category')[0].selectedIndex].value;
             tempJson.templateName = templateName;
-            tempJson.time = time;
-            tempJson.category = category;
             for (var i = 0; i < days.length; i++) {
                 var interTab = [];
                 var interTabCat = [];
@@ -191,8 +187,8 @@ $(document).ready(function () {
                         interTabCat.push(j);
                     }
                 }
-                template.time[0].value[i] = interTab;
-                template.time[1].value[i] = interTabCat;
+                tempJson.time[0].value[i] = interTab;
+                tempJson.time[1].value[i] = interTabCat;
                 var temp_morn = $('#select-' + days[i] + '-morning')[0].value;
                 var temp_after = $('#select-' + days[i] + '-afternoon')[0].value;
                 tempJson.location_morn[i] = temp_morn;

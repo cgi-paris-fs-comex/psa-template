@@ -2,7 +2,6 @@ $(document).ready(function () {
     /* Display all templates */
     function displayBtn() {
         for (var key in localStorage) {
-
             if (key.length < 3) {
                 if (localStorage.getItem(key) != null) {
                     var options = JSON.parse(localStorage.getItem(key));

@@ -3,6 +3,20 @@ $(document).ready(function () {
     if (localStorage.length != 0) {
         displayTemplate();
     }
+    var nbExtraProj = 0;
+    function initProjectLines() {
+        var i = 1;
+        $('#projectLines').click(function () {
+            nbExtraProj++;
+            var lines = "<tr><td>Extra Project" + i + "</td>";
+            for (var j = 0; j < 7; j++) {
+                lines += "<td><input type='text' id='P" + i + "D" + (j + 1) + "'></td>";
+            }
+            i++;
+            lines += "</tr>";
+            $("#tabLines")[0].innerHTML += lines;
+        });
+    }
     /*function that initialize the table */
     function initCatTable() {
         var table = "<tr><th></th>";
@@ -30,7 +44,6 @@ $(document).ready(function () {
         for (var i = 0; i < days.length; i++) {
             table += "<td> <select id='select-" + days[i] + "-morning'>";
             for (var j = 0; j < locations.length - 1; j++) {
-
                 table += "<option value='" + locations[j].value + "'>" + locations[j].label + "</option>";
             }
             table += "<option selected value='" + locations[3].value + "'>" + locations[3].label + "</option></select></td>";
@@ -38,7 +51,6 @@ $(document).ready(function () {
         table += "</tr><tr>";
         for (var i = 0; i < days.length; i++) {
             table += "<td> <select id='select-" + days[i] + "-afternoon'>";
-
             for (var j = 0; j < locations.length - 1; j++) {
                 table += "<option value='" + locations[j].value + "'>" + locations[j].label + "</option>";
             }
@@ -47,7 +59,8 @@ $(document).ready(function () {
         table += "</tr>";
         $('#locationTable')[0].innerHTML = table;
     }
-    initCatTable()
+    initCatTable();
+    initProjectLines();
     intitLocation();
 
     /* Save the template */
@@ -69,6 +82,7 @@ $(document).ready(function () {
                 { name: 'tabTime', value: [] },
                 { name: 'tabCat', value: [] }
             ],
+            extraProjTime: [],
             location_morn: [],
             location_after: [],
             id: id,
@@ -76,13 +90,20 @@ $(document).ready(function () {
         for (var i = 0; i < days.length; i++) {
             var interTab = [];
             var interTabCat = [];
+            var extraLine = []
+            if (nbExtraProj > 0) {
+                for (var j = 1; j <= nbExtraProj; j++) {
+                    extraLine.push($("#P" + j + "D" + (i + 1))[0].value);
+                }
+                template.extraProjTime.push(extraLine);
+            }
             for (var j = (-1); j < categories.length - 1; j++) {
                 var k = i + 1;
                 var l = j;
                 if ($("#C" + j + "D" + k)[0].value != '') {
                     interTab.push($("#C" + j + "D" + k)[0].value);
                     interTabCat.push(l);
-                    l=j-1;
+                    l = j - 1;
                 }
             }
             template.time[0].value.push(interTab);
@@ -126,15 +147,31 @@ $(document).ready(function () {
     function editItem(param) {
         var tempJson = JSON.parse(localStorage.getItem(param));
         $('#templateName')[0].value = tempJson.templateName;
+        if (tempJson.extraProjTime.length > 0) {
+            var max = 0;
+            for (var i = 0; i < tempJson.extraProjTime.length - 1; i++) {
+                if (tempJson.extraProjTime[i].length < tempJson.extraProjTime[i + 1].length) {
+                    max = tempJson.extraProjTime[i + 1].length;
+                }
+                else {
+                    max = tempJson.extraProjTime[i].length;
+                }
+            }
+            for (var i = 0; i < max; i++) {
+                $('#projectLines').trigger('click');
+            }
+            for (var i = 0; i < tempJson.extraProjTime.length; i++) {
+                for (var j = 0; j < tempJson.extraProjTime[i].length; j++) {
+                    $("#P" + (j + 1) + "D" + (i + 1))[0].value = tempJson.extraProjTime[i][j];
+                }
+            }
+        }
         for (var i = 0; i < days.length; i++) {
-            for (var j = 0; j < categories.length ; j++) {
-                if (tempJson.time[0].value[i][j-1] != undefined) {
-                    for(var k = 0; k<tempJson.time[1].value.length;k++ ){
-                        for(var l =0; l<tempJson.time[1].value[k].length;l++){
-                            $("#C" + tempJson.time[1].value[k][l] + "D" + (k+1))[0].value = tempJson.time[0].value[i][j-1];
-                        }
+            for (var j = 0; j < categories.length; j++) {
+                if (tempJson.time[0].value[i][j - 1] != undefined) {
+                    for (var l = 0; l < tempJson.time[1].value[i].length; l++) {
+                        $("#C" + tempJson.time[1].value[i][l] + "D" + (i + 1))[0].value = tempJson.time[0].value[i][l];
                     }
-                   
                 }
             }
             var temp_morn = $('#select-' + days[i] + '-morning')[0];
@@ -148,13 +185,20 @@ $(document).ready(function () {
             for (var i = 0; i < days.length; i++) {
                 var interTab = [];
                 var interTabCat = [];
+                var extraLine = []
+                if (nbExtraProj > 0) {
+                    for (var j = 1; j <= nbExtraProj; j++) {
+                        extraLine.push($("#P" + j + "D" + (i + 1))[0].value);
+                    }
+                    tempJson.extraProjTime[i] = extraLine;
+                }
                 for (var j = (-1); j < categories.length - 1; j++) {
                     var k = i + 1;
                     var l = j;
                     if ($("#C" + j + "D" + k)[0].value != '') {
                         interTab.push($("#C" + j + "D" + k)[0].value);
                         interTabCat.push(l);
-                        l=j-1;
+                        l = j - 1;
                     }
                 }
                 tempJson.time[0].value[i] = interTab;

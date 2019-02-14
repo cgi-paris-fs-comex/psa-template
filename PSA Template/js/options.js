@@ -129,12 +129,9 @@ $(document).ready(function () {
         for (var i = 0; i < days.length; i++) {
             for (var j = 0; j < categories.length ; j++) {
                 if (tempJson.time[0].value[i][j-1] != undefined) {
-                    for(var k = 0; k<tempJson.time[1].value.length;k++ ){
-                        for(var l =0; l<tempJson.time[1].value[k].length;l++){
-                            $("#C" + tempJson.time[1].value[k][l] + "D" + (k+1))[0].value = tempJson.time[0].value[i][j-1];
-                        }
-                    }
-                   
+                    for(var l = 0; l<tempJson.time[1].value[i].length;l++){
+                        $("#C" + tempJson.time[1].value[i][l] + "D" + (i+1))[0].value = tempJson.time[0].value[i][l];
+                    }                   
                 }
             }
             var temp_morn = $('#select-' + days[i] + '-morning')[0];

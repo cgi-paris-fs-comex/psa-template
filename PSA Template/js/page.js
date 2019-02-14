@@ -5,7 +5,6 @@ var locations_morn;
 var locations_after;
 var category;
 var extraproj;
-
 chrome.runtime.onMessage.addListener(startContentScript);
 
 function startContentScript(message) {
@@ -32,26 +31,29 @@ function startContentScript(message) {
 	};
 	var updateTimeOnLine = function () {
 		console.log('onUpdateTimeOnLine');
-		if(extraproj.length>0){
-			for(var i = 0;i<extraproj.length;i++){
-				for(var j=0;j<extraproj[i].length;j++){
-					setValue('TIME', i+1, j+1, extraproj[i][j]);
-				}			
+		if (extraproj.length > 0) {
+			for (var i = 0; i < extraproj.length; i++) {
+				for (var j = 0; j < extraproj[i].length; j++) {
+					setValue('TIME', i + 1, j + 1, extraproj[i][j]);
+				}
 			}
 		}
 		for (var i = 0; i < category.length; i++) {
 			for (var j = 0; j < category[i].length; j++) {
 				if (category[i][j] == "-1") {
 
-					setValue('TIME', i+1, 0, time[i][j]);
+					setValue('TIME', i + 1, 0, time[i][j]);
 
 				}
 				else {
-					setValue('POL_TIME', i+1, category[i][j], time[i][j]);
-
+					var catStr = ($('span:contains("'+categories[(category[i][j])+1]+'")')[0].id).toString();
+					var col= catStr.split('$')[1];
+					setValue('POL_TIME', i + 1, col, time[i][j]);
 				}
+
 			}
 		}
+
 
 	};
 

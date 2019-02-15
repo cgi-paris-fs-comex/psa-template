@@ -1,7 +1,7 @@
 {
   "name": "PSA Template",
   "description": "Remplis le formulaire PSA Time",
-  "version": "1.1",
+  "version": "1.1.1",
   "manifest_version": 2,
   "icons": {
     "16": "img/logo/icon-16px.png",

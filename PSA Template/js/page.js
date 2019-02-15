@@ -38,9 +38,10 @@ function startContentScript(message) {
 
 				}
 				else {
+					console.log(category[i][j]+1);
 					var catStr = ($('span:contains("'+categories[(category[i][j])+1]+'")')[0].id).toString();
-					var col= catStr.split('$')[1];
-					setValue('POL_TIME', i + 1, col, time[i][j]);
+					var lin= catStr.split('$')[1];
+					setValue('POL_TIME', i + 1, lin, time[i][j]);
 
 				}
 			}

@@ -1,32 +1,17 @@
-
+chrome.runtime.sendMessage({ "message": "activate_icon" });
 /* Configuration */
-console.log('work');
 var time;
-var locations;
+var locations_morn;
+var locations_after;
 var category;
 
 chrome.runtime.onMessage.addListener(startContentScript);
 
 function startContentScript(message) {
-	console.log(message.time)
-	time = message.time;
-	locations = message.location;
-	category = message.category;
-
-
-
-
-
-	//var localSunday = documents.getElementById('');
-	//var locations = [ /* C : Client, O : CGI, T : Télétravail, NA : N/A */
-	//'NA', /* Dimanche */
-	//'O', /* Lundi */
-	//'O', /* Mardi */
-	//'O', /* Mercredi */
-	//'O', /* Jeudi */
-	//'O', /* Vendredi */
-	//'NA' /* Samedi */
-	//	];
+	time = message.time[0].value;
+	locations_morn = message.location_morn;
+	locations_after = message.location_after;
+	category = message.time[1].value;
 
 	/* Code */
 
@@ -35,39 +20,29 @@ function startContentScript(message) {
 	for (var iframeIndex = 0; iframeIndex < iframes.length; iframeIndex++) {
 		documents.push(iframes[iframeIndex].contentDocument);
 	}
-	/*var $ = function (selector) {
-		selector = selector.substr(1).replace(/\\\$/g, '$');
-		console.log(selector);
-		for (var documentIndex = 0; documentIndex < documents.length; documentIndex++) {
-			var elem = documents[documentIndex].getElementById(selector);
-			if (elem) {
-				return elem;
-			}
-		}
-		console.log('not found');
-		return null;
-	};*/
-	console.log(documents);
 
 	/* TIMETABLE */
 	var timeTable = $('#l0EX_TIME_DTL\\$0');
 
 	var updateTime = function () {
 		console.log('onUpdateTime');
-		updateTimeOnLine(0);
+		updateTimeOnLine();
 	};
-	var updateTimeOnLine = function (line) {
+	var updateTimeOnLine = function () {
 		console.log('onUpdateTimeOnLine');
-		if (category == "proj") {
-			for (var column = 2; column <= 6; column++) {
-				setValue('TIME', column, line, time);
-			}
-		}
-		else {
-			console.log('category=' + category);
-			line = category;
-			for (var column = 2; column <= 6; column++) {
-				setValue('POL_TIME', column, line, time);
+		for (var i = 0; i < category.length; i++) {
+			for (var j = 0; j < category[i].length; j++) {
+				if (category[i][j] == "-1") {
+
+					setValue('TIME', i+1, 0, time[i][j]);
+
+				}
+				else {
+					var catStr = ($('span:contains("'+categories[(category[i][j])+1]+'")')[0].id).toString();
+					var lin= catStr.split('$')[1];
+					setValue('POL_TIME', i + 1, lin, time[i][j]);
+
+				}
 			}
 		}
 
@@ -77,10 +52,11 @@ function startContentScript(message) {
 
 	var updateRestLunchLocation = function () {  //methode pour changer la location (cgi, site client...etc)
 		for (var column = 1; column <= 7; column++) {
-			var location = locations[column - 1];
-			updateRestOnColumn(column, location == 'NA' ? 'NA' : 'Y');
-			updateLunchOnColumn(column, location == 'NA' ? 0 : 1);
-			updateLocationOnColumn(column, location);
+			var location_morn = locations_morn[column - 1];
+			var location_after = locations_after[column - 1];
+			updateRestOnColumn(column, (location_morn == 'NA' && location_after == 'NA') ? 'NA' : 'Y');
+			updateLunchOnColumn(column, (location_morn == 'NA' && location_after == 'NA') ? 0 : 1);
+			updateLocationOnColumn(column, location_morn, location_after);
 		}
 
 		/* Overtime requested by manager */
@@ -101,29 +77,26 @@ function startContentScript(message) {
 		}
 	};
 
-	var updateLocationOnColumn = function (column, value) {
-		setValue('UC_LOCATION_A', column, 0, value);
-		setValue('UC_LOCATION_A', column, 1, value);
+	var updateLocationOnColumn = function (column, value_morn, value_after) {
+		setValue('UC_LOCATION_A', column, 0, value_morn);
+		setValue('UC_LOCATION_A', column, 1, value_after);
 	};
 
 	var setValue = function (name, column, line, value) {
 		var id = '#' + name + column + '\\$' + line;
-		console.log("test" + id);
 		var elem = $(id);
 		elem.val(value);
-		console.log(elem.value);
 		var changeEvent = document.createEvent("HTMLEvents");
 		changeEvent.initEvent("change", true, true);
-		if((elem)[0]){
+		if ((elem)[0]) {
 			$(elem)[0].dispatchEvent(changeEvent);
 		}
-		//elem.onchange();
 	};
 
-	if (timeTable) {
+	if (timeTable.length != 0 && restTable.length != 1) {
 		updateTime();
 	}
-	if (restTable) {
+	if (restTable.length != 0) {
 		updateRestLunchLocation();
 	}
 

@@ -3,38 +3,101 @@ $(document).ready(function () {
     if (localStorage.length != 0) {
         displayTemplate();
     }
-    var nbExtraProj = 0;
-    function initProjectLines() {
-        var i = 1;
-        $('#projectLines').click(function () {
-            nbExtraProj++;
-            var lines = "<tr><td>Extra Project" + i + "</td>";
-            for (var j = 0; j < 7; j++) {
-                lines += "<td><input type='text' id='P" + i + "D" + (j + 1) + "'></td>";
-            }
-            i++;
-            lines += "</tr>";
-            $("#tabLines")[0].innerHTML += lines;
-        });
-    }
-    /*function that initialize the table */
-    function initCatTable() {
-        var table = "<tr><th></th>";
-        for (var i = 0; i < days.length; i++) {
-            table += "<th>" + days[i] + "</th>";
+    var catl = 0;
+    var projl = 0;
+    function addProject(line) {
+        $('#projectForm')[0].innerHTML += "<div class='row'>";
+        for (var i = 1; i < days.length + 1; i++) {
+            $('#projectForm')[0].innerHTML += "<div id='proj" + line + "' class='col s1 input-field'><input type='text' id='P" + line + "D" + i + "'><label class='active' for='P" + line + "D" + i + "'>" + days[i - 1] + "</label></div>";
         }
-        table += "</tr>";
-        for (var i = 0; i < categories.length; i++) {
-            table += "<tr><td>" + categories[i] + "</td>";
-            for (var j = 0; j < 7; j++) {
-                table += "<td><input type='text' id='C" + (i - 1) + "D" + (j + 1) + "'></td>";
-            }
-            table += "</tr>";
-        }
-        $('#categoryTable')[0].innerHTML = table;
-    }
+        $('#projectForm')[0].innerHTML += "<div class='col input-field'><button data-target='Dialog' class='modal-trigger waves-effect waves-light white-text red lighten-1 btn material-icons' id='delete" + line + "'>delete</button></div></div>";
+        line++;
+    };
 
-    /*initialise location table */
+    function addProjectToOthers() {
+        temp = [];
+        for (var i = 0; i < projl; i++) {
+            temp.push([]);
+            for (var j = 0; j < 7; j++) {
+                temp[i].push($("#P" + i + "D" + (j + 1))[0].value);
+            }
+        }
+        addProject(projl)
+        projl++;
+        for (var i = 0; i < projl - 1; i++) {
+            for (var j = 0; j < 7; j++) {
+                $("#P" + i + "D" + (j + 1))[0].value = temp[i][j];
+            }
+        }
+    };
+
+    function addCategory(line) {
+        var cat = "<div class='row'><div class='col s3 input-field'><select id='select" + line + "'>";
+        for (var i = 0; i < categories.length; i++) {
+            cat += "<option value='" + categories[i] + "'>" + categories[i] + "</option>";
+        }
+        cat += "</select></div>";
+        for (var i = 1; i < days.length + 1; i++) {
+            cat += "<div class='col s1 input-field'><input type='text' id='C" + line + "D" + i + "'><label class='active' for='C" + line + "D" + i + "'>" + days[i - 1] + "</label></div>";
+        }
+        cat += "<div class='col input-field'><button data-target='Dialog' class='modal-trigger waves-effect waves-light white-text red lighten-1 btn material-icons' id='deleteCat" + line + "'>delete</button></div></div>";
+        $('#categoriesForm')[0].innerHTML += cat;
+        line++;
+    };
+
+    function addCategoryToOthers() {
+        temp = [];
+        temp2 = [];
+        for (var i = 0; i < catl; i++) {
+            temp.push([]);
+            for (var j = 0; j < 7; j++) {
+                temp[i].push($("#C" + i + "D" + (j + 1))[0].value);
+            }
+            temp2.push($("#select" + i)[0].value);
+        }
+        addCategory(catl)
+        catl++;
+        for (var i = 0; i < catl - 1; i++) {
+            for (var j = 0; j < 7; j++) {
+                $("#C" + i + "D" + (j + 1))[0].value = temp[i][j];
+            }
+            $("#select" + i)[0].value = temp2[i];
+        }
+    };
+
+    $('#popbtn').click(function () {
+        $('.modal').modal();
+        $('#addProjectBtn').click(function () {
+            if (projl == 0) {
+                addProject(projl)
+                projl++;
+            }
+            else {
+                addProjectToOthers();
+            }
+        });
+        $('#addCategoriesBtn').click(function () {
+            $('select').formSelect('destroy');
+            if (catl == 0) {
+                addCategory(catl)
+
+            }
+            else {
+                addCategoryToOthers()
+            }
+            $('select').formSelect();
+        });
+        $('#saveBtn').click(function () {
+            var json = jsonConstructor();
+            storeJson(json);
+            location.reload();
+        });
+        $('#closeBtn').click(function () {
+            location.reload();
+        });
+        $('select').formSelect();
+    });
+
     function intitLocation() {
         var table = "<tr>";
         for (var i = 0; i < days.length; i++) {
@@ -42,34 +105,27 @@ $(document).ready(function () {
         }
         table += "</tr><tr>";
         for (var i = 0; i < days.length; i++) {
-            table += "<td> <select id='select-" + days[i] + "-morning'>";
+            table += "<td> <div class='input-field col s12'> <select id='select-" + days[i] + "-morning'>";
             for (var j = 0; j < locations.length - 1; j++) {
                 table += "<option value='" + locations[j].value + "'>" + locations[j].label + "</option>";
             }
-            table += "<option selected value='" + locations[3].value + "'>" + locations[3].label + "</option></select></td>";
+            table += "<option selected value='" + locations[3].value + "'>" + locations[3].label + "</option></select></div></td>";
         }
         table += "</tr><tr>";
         for (var i = 0; i < days.length; i++) {
-            table += "<td> <select id='select-" + days[i] + "-afternoon'>";
+            table += "<td> <div class='input-field col s12'> <select id='select-" + days[i] + "-afternoon'>";
             for (var j = 0; j < locations.length - 1; j++) {
                 table += "<option value='" + locations[j].value + "'>" + locations[j].label + "</option>";
             }
-            table += "<option selected value='" + locations[3].value + "'>" + locations[3].label + "</option></select></td>";
+            table += "<option selected value='" + locations[3].value + "'>" + locations[3].label + "</option></select></div></td>";
         }
         table += "</tr>";
         $('#locationTable')[0].innerHTML = table;
-    }
-    initCatTable();
-    initProjectLines();
-    intitLocation();
+    };
 
-    /* Save the template */
-    $('#submitBtn').click(function () {
-        var json = jsonConstructor();
-        storeJson(json);
-        location.reload();
-    });
-    /* Create the JSON with all templates informations */
+    intitLocation();
+    $('.fixed-action-btn').floatingActionButton();
+
     function jsonConstructor() {
         var templateName = $('#templateName')[0].value;
         var id = 0;
@@ -82,60 +138,81 @@ $(document).ready(function () {
                 { name: 'tabTime', value: [] },
                 { name: 'tabCat', value: [] }
             ],
-            extraProjTime: [],
+            projTime: [],
             location_morn: [],
             location_after: [],
             id: id,
         };
+        createProjectTime(template.projTime);
+        createCatTime(template.time[0].value, template.time[1].value);
+        createLocationTime(template.location_morn, template.location_after)
+        return JSON.stringify(template);
+    };
+
+    function createLocationTime(morning, afternoon) {
         for (var i = 0; i < days.length; i++) {
-            var interTab = [];
-            var interTabCat = [];
-            var extraLine = []
-            if (nbExtraProj > 0) {
-                for (var j = 1; j <= nbExtraProj; j++) {
-                    extraLine.push($("#P" + j + "D" + (i + 1))[0].value);
-                }
-                template.extraProjTime.push(extraLine);
-            }
-            for (var j = (-1); j < categories.length - 1; j++) {
-                var k = i + 1;
-                var l = j;
-                if ($("#C" + j + "D" + k)[0].value != '') {
-                    interTab.push($("#C" + j + "D" + k)[0].value);
-                    interTabCat.push(l);
-                    l = j - 1;
-                }
-            }
-            template.time[0].value.push(interTab);
-            template.time[1].value.push(interTabCat);
             var temp_morn = $('#select-' + days[i] + '-morning')[0];
             var temp_after = $('#select-' + days[i] + '-afternoon')[0];
-            template.location_morn.push(temp_morn.options[temp_morn.selectedIndex].value);
-            template.location_after.push(temp_after.options[temp_after.selectedIndex].value);
+            morning.push(temp_morn.options[temp_morn.selectedIndex].value);
+            afternoon.push(temp_after.options[temp_after.selectedIndex].value);
         }
-        return JSON.stringify(template);
-    }
-    /* Store the JSON in LocalStorage to keep it saved inside the extension */
-    function storeJson(parameter) {
-        localStorage.setItem(JSON.parse(parameter).id, parameter)
-    }
-    /* Display templates in option */
-    function displayTemplate() {
-        for (var key in localStorage) {
-            if (localStorage.getItem(key) != null) {
-                disp = $('#templatesSummary')[0];
-                disp.innerHTML += "<tr><h2>" + JSON.parse(localStorage.getItem(key)).templateName + "</h2><ul><button value='" + JSON.parse(localStorage.getItem(key)).id + "' id='edit'>edit</button><button value='" + JSON.parse(localStorage.getItem(key)).id + "' id='duplicate'>duplicate</button><button value='" + JSON.parse(localStorage.getItem(key)).id + "' id='delete'>delete</button></ul></tr>";
+    };
+
+    function createCatTime(catTime, catName) {
+        if (catl > 0) {
+            for (var j = 0; j < catl; j++) {
+                var CatTab = [];
+                for (var i = 1; i <= days.length; i++) {
+                    CatTab.push($("#C" + j + "D" + i)[0].value);
+                }
+                var temp = $("#select" + j)[0];
+                catName.push(temp.options[temp.selectedIndex].value);
+                catTime.push(CatTab);
             }
         }
-    }
-    /* Run fuction after a click of an edit/delete/duplicate button */
+    };
+
+    function createProjectTime(projectTab) {
+        if (projl > 0) {
+            for (var j = 0; j < projl; j++) {
+                var projLine = [];
+                for (var i = 1; i <= days.length; i++) {
+                    projLine.push($("#P" + j + "D" + i)[0].value);
+                }
+                projectTab.push(projLine);
+            }
+        }
+    };
+
+    function storeJson(parameter) {
+        localStorage.setItem(JSON.parse(parameter).id, parameter);
+    };
+
+    function displayTemplate() {
+        var disp;
+        for (var key in localStorage) {
+            if (localStorage.getItem(key) != null) {
+                var getId = JSON.parse(localStorage.getItem(key)).id;
+                disp = "<div class='col s12 m4'><div class='card blue-grey darken-1'><div class='card-content white-text'><span class='card-title'>" + JSON.parse(localStorage.getItem(key)).templateName
+                    + "</span><p>Template for PSA Time</p></div>"
+                    + "<div class='card-action'>"
+                    +"<button class='btn-flat orange-text material-icons' value='" + getId + "' id='edit'>edit</button>"
+                    + "<button class='btn-flat orange-text material-icons' value='" + getId + "' id='delete'>delete</button>"
+                    + "<button class='btn-flat orange-text material-icons' value='" + getId + "' id='duplicate'>filter_none</button></div></div></div>";
+                $('#templatesBody')[0].innerHTML += disp;
+            }
+        }
+    };
+
     $('button').click(function (event) {
+
         if (event.target.id == 'delete') {
-            localStorage.removeItem(event.target.value); //Delete function
+            localStorage.removeItem(event.target.value);
             location.reload();
         }
         if (event.target.id == 'edit') {
-            $('#edit-btn')[0].innerHTML = "<button  id='edit2'>Save</button>"
+            $('.modal-footer')[0].innerHTML = "<button class='modal-close waves-effect waves-green btn green' id='saveBtn2'>OK</button>"
+                + "<button class='modal-close waves-effect waves-red btn red' id='closeBtn'>Cancel</button>"
             editItem(event.target.value);
         }
         if (event.target.id == "duplicate") {
@@ -143,76 +220,106 @@ $(document).ready(function () {
             location.reload();
         }
     });
-    /* Edit to modify a template */
-    function editItem(param) {
-        var tempJson = JSON.parse(localStorage.getItem(param));
-        $('#templateName')[0].value = tempJson.templateName;
-        if (tempJson.extraProjTime.length > 0) {
-            var max = 0;
-            for (var i = 0; i < tempJson.extraProjTime.length - 1; i++) {
-                if (tempJson.extraProjTime[i].length < tempJson.extraProjTime[i + 1].length) {
-                    max = tempJson.extraProjTime[i + 1].length;
-                }
-                else {
-                    max = tempJson.extraProjTime[i].length;
-                }
+
+    function displayCategories(json) {
+        if (json.time[0].value.length > 0) {
+            catl = json.time[0].value.length;
+            for (var i = 0; i < json.time[0].value.length; i++) {
+                addCategory(i)
             }
-            for (var i = 0; i < max; i++) {
-                $('#projectLines').trigger('click');
-            }
-            for (var i = 0; i < tempJson.extraProjTime.length; i++) {
-                for (var j = 0; j < tempJson.extraProjTime[i].length; j++) {
-                    $("#P" + (j + 1) + "D" + (i + 1))[0].value = tempJson.extraProjTime[i][j];
+            for (var i = 0; i < json.time[0].value.length; i++) {
+                $('select').formSelect();
+                var temp = $("#select" + i)[0];
+                temp.value = json.time[1].value[i];
+                for (var j = 0; j < json.time[0].value[i].length; j++) {
+                    $("#C" + i + "D" + (j + 1))[0].value = json.time[0].value[i][j];
                 }
             }
         }
-        for (var i = 0; i < days.length; i++) {
-            for (var j = 0; j < categories.length; j++) {
-                if (tempJson.time[0].value[i][j - 1] != undefined) {
-                    for (var l = 0; l < tempJson.time[1].value[i].length; l++) {
-                        $("#C" + tempJson.time[1].value[i][l] + "D" + (i + 1))[0].value = tempJson.time[0].value[i][l];
-                    }
+    };
+
+    function displayProject(json) {
+        if (json.projTime.length > 0) {
+            projl = json.projTime.length;
+            for (var i = 0; i < json.projTime.length; i++) {
+                addProject(i)
+            }
+            for (var i = 0; i < json.projTime.length; i++) {
+                for (var j = 0; j < json.projTime[i].length; j++) {
+                    $("#P" + i + "D" + (j + 1))[0].value = json.projTime[i][j];
                 }
             }
+        }
+    };
+
+    function displayLocations(json) {
+        for (var i = 0; i < days.length; i++) {
             var temp_morn = $('#select-' + days[i] + '-morning')[0];
             var temp_after = $('#select-' + days[i] + '-afternoon')[0];
-            temp_morn.value = tempJson.location_morn[i];
-            temp_after.value = tempJson.location_after[i];
+            temp_morn.value = json.location_morn[i];
+            temp_after.value = json.location_after[i];
+            $('select').formSelect();
         }
-        $('#edit2').click(function () {
-            var templateName = $('#templateName')[0].value;
-            tempJson.templateName = templateName;
-            for (var i = 0; i < days.length; i++) {
-                var interTab = [];
-                var interTabCat = [];
-                var extraLine = []
-                if (nbExtraProj > 0) {
-                    for (var j = 1; j <= nbExtraProj; j++) {
-                        extraLine.push($("#P" + j + "D" + (i + 1))[0].value);
-                    }
-                    tempJson.extraProjTime[i] = extraLine;
+    };
+
+    function editCatTime(catTime, catName) {
+        if (catl > 0) {
+            for (var j = 0; j < catl; j++) {
+                var CatTab = [];
+                for (var i = 1; i <= days.length; i++) {
+                    CatTab.push($("#C" + j + "D" + i)[0].value);
                 }
-                for (var j = (-1); j < categories.length - 1; j++) {
-                    var k = i + 1;
-                    var l = j;
-                    if ($("#C" + j + "D" + k)[0].value != '') {
-                        interTab.push($("#C" + j + "D" + k)[0].value);
-                        interTabCat.push(l);
-                        l = j - 1;
-                    }
-                }
-                tempJson.time[0].value[i] = interTab;
-                tempJson.time[1].value[i] = interTabCat;
-                var temp_morn = $('#select-' + days[i] + '-morning')[0].value;
-                var temp_after = $('#select-' + days[i] + '-afternoon')[0].value;
-                tempJson.location_morn[i] = temp_morn;
-                tempJson.location_after[i] = temp_after;
-                localStorage.setItem(tempJson.id, JSON.stringify(tempJson));
+                var temp = $("#select" + j)[0];
+                catName[j] = temp.options[temp.selectedIndex].value;
+                catTime[j] = CatTab;
             }
+        }
+    };
+
+    function editProjectTime(projectTab) {
+        if (projl > 0) {
+            for (var j = 0; j < projl; j++) {
+                var projLine = [];
+                for (var i = 1; i <= days.length; i++) {
+                    projLine.push($("#P" + j + "D" + i)[0].value);
+                }
+                projectTab[j] = projLine;
+            }
+        }
+    };
+
+    function editLocationTime(morning, afternoon) {
+        $('select').formSelect();
+        for (var i = 0; i < days.length; i++) {
+            var temp_morn = $('#select-' + days[i] + '-morning')[0];
+            var temp_after = $('#select-' + days[i] + '-afternoon')[0];
+            morning[i] = temp_morn.options[temp_morn.selectedIndex].value;
+            afternoon[i] = temp_after.options[temp_after.selectedIndex].value;
+        }
+    };
+
+    function runEdition(json) {
+        var templateName = $('#templateName')[0].value;
+        json.templateName = templateName;
+        editProjectTime(json.projTime);
+        editCatTime(json.time[0].value, json.time[1].value);
+        editLocationTime(json.location_morn, json.location_after);
+    };
+
+    function editItem(param) {
+        $('#popbtn').trigger('click');
+        var tempJson = JSON.parse(localStorage.getItem(param));
+        $('#templateName')[0].value = tempJson.templateName;
+        displayProject(tempJson);
+        displayCategories(tempJson);
+        displayLocations(tempJson);
+        $('#saveBtn2').click(function () {
+            runEdition(tempJson);
+            localStorage.setItem(tempJson.id, JSON.stringify(tempJson));
             location.reload();
         });
-    }
-    /* Duplicate the template */
+    };
+
     function duplicateItem(param) {
         var tempJ = JSON.parse(localStorage.getItem(param));
         tempJ.templateName = tempJ.templateName + "-copy";
@@ -222,6 +329,5 @@ $(document).ready(function () {
         }
         tempJ.id = id;
         storeJson(JSON.stringify(tempJ));
-
-    }
+    };
 });

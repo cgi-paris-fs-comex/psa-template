@@ -80,7 +80,7 @@ $(document).ready(function () {
             $('select').formSelect('destroy');
             if (catl == 0) {
                 addCategory(catl)
-
+                catl++;
             }
             else {
                 addCategoryToOthers()

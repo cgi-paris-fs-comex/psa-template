@@ -6,12 +6,14 @@ $(document).ready(function () {
     var catl = 0;
     var projl = 0;
     function addProject(line) {
-        $('#projectForm')[0].innerHTML += "<div id='proj" + line + "0' class='row'>";
+        var proj = "<div id='proj" + line + "' class='row'><div  class='col s2 input-field'><input type='text' class='validate' disabled value='Project" + line + "'></div>";
         for (var i = 1; i < days.length + 1; i++) {
-            $('#projectForm')[0].innerHTML += "<div id='proj" + line + i.toString() + "' class='col s1 input-field'><input type='text' id='P" + line + "D" + i + "'><label class='active' for='P" + line + "D" + i + "'>" + days[i - 1] + "</label></div>";
+            proj += "<div class='col s1 input-field'><input type='text' id='P" + line + "D" + i + "'><label class='active' for='P" + line + "D" + i + "'>" + days[i - 1] + "</label></div>";
         }
-        $('#projectForm')[0].innerHTML += "<div id='proj" + line + '8' + "' class='col input-field'><button data-target='Dialog' class='modal-trigger waves-effect waves-light white-text red lighten-1 btn material-icons' id='delete" + line + "'>delete</button></div></div>";
-        line++;
+        proj += "<div class='col s3 input-field'><button data-target='Dialog' class='modal-trigger waves-effect waves-light white-text red lighten-1 btn material-icons' id='delete" + line + "'>delete</button>"
+            + "<button data-target='Dialog' class='modal-trigger waves-effect waves-light white-text green lighten-1 btn material-icons' id='duplicate" + line + "'>filter_none</button></div></div>";
+        $('#projectForm')[0].innerHTML += proj;
+        projl++;
     };
 
     function addProjectToOthers() {
@@ -23,7 +25,6 @@ $(document).ready(function () {
             }
         }
         addProject(projl)
-        projl++;
         for (var i = 0; i < projl - 1; i++) {
             for (var j = 0; j < 7; j++) {
                 $("#P" + i + "D" + (j + 1))[0].value = temp[i][j];
@@ -32,7 +33,7 @@ $(document).ready(function () {
     };
 
     function addCategory(line) {
-        var cat = "<div id = 'cat" + line + "' class='row'><div class='col s3 input-field'><select id='select" + line + "'>";
+        var cat = "<div id = 'cat" + line + "' class='row'><div class='col s2 input-field'><select id='select" + line + "'>";
         for (var i = 0; i < categories.length; i++) {
             cat += "<option value='" + categories[i] + "'>" + categories[i] + "</option>";
         }
@@ -40,9 +41,10 @@ $(document).ready(function () {
         for (var i = 1; i < days.length + 1; i++) {
             cat += "<div class='col s1 input-field'><input type='text' id='C" + line + "D" + i + "'><label class='active' for='C" + line + "D" + i + "'>" + days[i - 1] + "</label></div>";
         }
-        cat += "<div  class='col input-field'><button data-target='Dialog' class='modal-trigger waves-effect waves-light white-text red lighten-1 btn material-icons' id='deleteCat" + line + "'>delete</button></div></div>";
+        cat += "<div  class='col s3 input-field'><button data-target='Dialog' class='modal-trigger waves-effect waves-light white-text red lighten-1 btn material-icons' id='deleteCat" + line + "'>delete</button>"
+            + "<button data-target='Dialog' class='modal-trigger waves-effect waves-light white-text green lighten-1 btn material-icons' id='duplicateCat" + line + "'>filter_none</button>";
         $('#categoriesForm')[0].innerHTML += cat;
-        line++;
+        catl++;
     };
 
     function addCategoryToOthers() {
@@ -56,7 +58,6 @@ $(document).ready(function () {
             temp2.push($("#select" + i)[0].value);
         }
         addCategory(catl)
-        catl++;
         for (var i = 0; i < catl - 1; i++) {
             for (var j = 0; j < 7; j++) {
                 $("#C" + i + "D" + (j + 1))[0].value = temp[i][j];
@@ -70,23 +71,21 @@ $(document).ready(function () {
         $('#addProjectBtn').click(function () {
             if (projl == 0) {
                 addProject(projl)
-                projl++;
             }
             else {
                 addProjectToOthers();
             }
-            deleteLine("delete", "proj", projl);
+            deleteLine("delete", "proj");
         });
         $('#addCategoriesBtn').click(function () {
             $('select').formSelect('destroy');
             if (catl == 0) {
                 addCategory(catl)
-                catl++
             }
             else {
                 addCategoryToOthers()
             }
-            deleteLine("deleteCat", "cat", catl);
+            deleteLine("deleteCat", "cat");
             $('select').formSelect();
         });
         $('#saveBtn').click(function () {
@@ -100,55 +99,63 @@ $(document).ready(function () {
         $('select').formSelect();
     });
 
-    function deleteLine(id, divId, type) {
-        if (type > 0) {
-            $('button').click(function (event) {
-                for (var i = 0; i < type; i++) {
+    function deleteLine(id, divId) {
+        $('button').click(function (event) {
+            if (id == "delete") {
+                for (var i = 0; i < projl; i++) {
                     if (event.target.id == (id + i)) {
-                        if (id == "delete") {
-                            middleDelProj(i,divId,type);
-                            projl--;
-                        }
-                        else {
-                            middleDelCat(i,divId,type);
-                            catl--;
-                        }
+
+                        middleDelProj(i, divId);
+                        projl--;
                     }
                 }
-            });
+            }
+
+            else {
+                for (var i = 0; i < catl; i++) {
+                    if (event.target.id == (id + i)) {
+                        middleDelCat(i, divId);
+                        catl--;
+                    }
+                }
+
+            }
+        });
+    };
+
+    function middleDelProj(boucle, div) {
+        if (projl > 1) {
+            if (boucle != (projl - 1)) {
+                for (var l = boucle; l < projl - 1; l++) {
+                    for (var k = 1; k < days.length; k++) {
+                        $("#P" + l + "D" + k)[0].value = $("#P" + (l + 1) + "D" + k)[0].value;
+                    }
+                }
+            }
+            $("#" + (div + (projl - 1)))[0].remove();
+
+        }
+        else {
+
+            $("#" + (div + boucle))[0].remove();
+
         }
     };
 
-    function middleDelProj(boucle , div ,typ){
-        if ((projl > 1) || (boucle != (typ - 1))) {
-            for (var l = boucle; l < typ - 1; l++) {
-                for (var k = 1; k < days.length + 1; k++) {
-                    $("#P" + l + "D" + k)[0].value = $("#P" + (l + 1) + "D" + k)[0].value;
+    function middleDelCat(boucle, div) {
+        if (catl > 1) {
+            if (boucle != (catl - 1)) {
+                for (var l = boucle; l < catl - 1; l++) {
+                    for (var k = 1; k < days.length; k++) {
+                        $("#C" + l + "D" + k)[0].value = $("#C" + (l + 1) + "D" + k)[0].value;
+                    }
+                    $("#select" + l)[0].value = $("#select" + (l + 1))[0].value;
                 }
             }
-            for (var j = 0; j < 9; j++) {
-                $("#" + (div + (typ - 1) + j))[0].remove();
-            }
+            $("#" + (div + (catl - 1)))[0].remove();
         }
         else {
-            for (var j = 0; j < 9; j++) {
-                $("#" + (div + boucle + j))[0].remove();
-            }
-        }
-    };
-
-    function middleDelCat(boucle , div ,typ){
-        if ((catl > 1) || (boucle != (typ - 1))) {
-            for (var l = boucle; l < typ - 1; l++) {
-                for (var k = 1; k < days.length + 1; k++) {
-                    $("#C" + l + "D" + k)[0].value = $("#C" + (l + 1) + "D" + k)[0].value;
-                }
-                $("#select" + l)[0].value = $("#select" + (l + 1))[0].value;
-            }
-            $("#" + (div + (typ - 1)))[0].remove();
-        }
-        else {
-            $("#" + (div + i))[0].remove();
+            $("#" + (div + boucle))[0].remove();
         }
     };
 
@@ -357,8 +364,8 @@ $(document).ready(function () {
         editLocationTime(json.location_morn, json.location_after);
     };
 
-    function deleteLineEdit(id, divId, type, json) {
-        deleteLine(id, divId, type);
+    function deleteLineEdit(id, divId, json) {
+        deleteLine(id, divId);
         $('button').click(function (event) {
             if (id == "delete") {
                 for (var i = 0; i < json.projTime.length; i++) {
@@ -384,9 +391,9 @@ $(document).ready(function () {
         var tempJson = JSON.parse(localStorage.getItem(param));
         $('#templateName')[0].value = tempJson.templateName;
         displayProject(tempJson);
-        deleteLineEdit("delete", "proj", projl, tempJson);
+        deleteLineEdit("delete", "proj", tempJson);
         displayCategories(tempJson);
-        deleteLineEdit("deleteCat", "cat", catl, tempJson);
+        deleteLineEdit("deleteCat", "cat", tempJson);
         displayLocations(tempJson);
         $('#saveBtn2').click(function () {
             runEdition(tempJson);

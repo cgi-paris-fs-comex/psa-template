@@ -8,8 +8,12 @@ $(document).ready(function () {
                     disp = document.getElementById('savedBtn');
                     var locationTab_morn = [];
                     var locationTab_after = [];
-                    var cat = [];
+                    var cat = options.time[1].value;
                     var time = options.time[0].value;
+                    for(var i = 0; i<options.projTime.length; i++){
+                        time.push(options.projTime[i]);
+                        cat.push("projet");
+                    }
                     for (var i = 0; i < options.location_morn.length; i++) {
                         for (var j = 0; j < locations.length; j++) {
                             if (options.location_morn[i] == locations[j].value) {
@@ -20,29 +24,11 @@ $(document).ready(function () {
                             }
                         }
                     }
-                    for (var j = 0; j < options.time[1].value.length; j++) {
-                        for (var k = 0; k < options.time[1].value[j].length; k++) {
-                            var a = 0;
-                            for(var i = 0;i<cat.length;i++){
-                                if(cat[i] == categories[options.time[1].value[j][k] + 1]){
-                                    break;
-                                }
-                                else{
-                                    a++
-                                }
-                            }
-                            if(a == cat.length){
-                                cat.push(categories[options.time[1].value[j][k] + 1]);
-                            }
-                        }
-                    }
                 }
-
-                disp.innerHTML += "<button id='" + options.id + "' title='time: Sun:"+time[0]+"h Mon:"+time[1]+"h Tue:"+time[2]+"h Wed:"+time[3]+"h Thu:"+time[4]+"h Fri:"+time[5]+"h Sat:"+time[6]+"h| location_morn:" + locationTab_morn + "|location_afer:" + locationTab_after + "|category:" + cat + "'>" + options.templateName + "</button>";
-
+                console.log(options);
+                disp.innerHTML += "<button class='btn-flat waves-effect waves-red' id='" + options.id + "' title='time:" + time + "h| location_morn:" + locationTab_morn + "|location_afer:" + locationTab_after + "|category:" + cat + "'>" + options.templateName + "</button>";
             }
         }
-
     }
 
 

@@ -4,29 +4,61 @@
     <meta charset="utf-8">
     <title>Options</title>
     <script src="../js/jquery.js"></script>
+    <script src="../js/materialize.min.js"></script>
     <script src="../js/data.js"></script>
     <script src="../js/options.js"></script>
+    <link rel="stylesheet" href="../css/materialize.min.css">
+    <link rel="stylesheet" href="../lib/materialize/css/materialize.css">
+    <link rel="stylesheet" href="../lib/materialize/css/materialize.icons.css">
 </head>
 
 <body>
-    <h1>Options</h1>
-    <input id="templateName" type="text" placeholder="template name">
-    <br>
-    <table id="categoryTable">
-    </table>
-    <button id="projectLines">Add Project lines</button>
-    <table  id = "tabLines">
-    </table>
-    <br>
-    <table id="locationTable">
-    </table>
-    <br>
-    <br>
-    <button class="btn-floating btn-large waves-effect waves-light blue" id="submitBtn"><i
-            class="material-icons">+</i></button>
-    <div id="edit-btn"></div>
-    <table id="templatesSummary">
+    <div class="row">
+        <h1>Options</h1>
+        <div id="templatesBody" class='row'>
 
-    </table>
+        </div>
+        <div class="modal" id="Dialog">
+            <div class="modal-content">
+                <div class="row col s12">
+                    <input id="templateName" type="text" placeholder="template name">
+                </div>
+                <div id="projectForm">
+                    <h5>Projects</h5>
+                </div>
+                <div class="row">
+                    <div class="right">
+                        <button data-target="Dialog"
+                            class="btn-floating waves-effect waves-light blue lighten-1 material-icons modal-trigger"
+                            id="addProjectBtn">add</button>
+                    </div>
+                </div>
+                <div id="categoriesForm">
+                    <h5>Categories</h5>
+                </div>
+                <div class="row">
+                    <div class="right">
+                        <button data-target="Dialog"
+                            class="btn-floating waves-effect waves-light blue lighten-1 material-icons modal-trigger"
+                            id="addCategoriesBtn">add</button>
+                    </div>
+                </div>
+                <table class="striped" id="locationTable">
+                </table>
+                <br>
+                <div class="modal-footer">
+                    <button class="modal-close waves-effect waves-green btn green" id="saveBtn">OK</button>
+                    <button class="modal-close waves-effect waves-red btn red" id="closeBtn">Cancel</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="fixed-action-btn">
+            <button data-target="Dialog"
+                class="btn-floating btn-large modal-trigger waves-effect waves-circle waves-light red" id="popbtn"><i
+                    class="material-icons">add</i></button>
+        </div>
+    </div>
 </body>
+
 </html>

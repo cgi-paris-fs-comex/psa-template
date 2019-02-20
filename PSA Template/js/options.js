@@ -6,11 +6,11 @@ $(document).ready(function () {
     var catl = 0;
     var projl = 0;
     function addProject(line) {
-        $('#projectForm')[0].innerHTML += "<div class='row'>";
+        $('#projectForm')[0].innerHTML += "<div id='proj" + line + "0' class='row'>";
         for (var i = 1; i < days.length + 1; i++) {
-            $('#projectForm')[0].innerHTML += "<div id='proj" + line + "' class='col s1 input-field'><input type='text' id='P" + line + "D" + i + "'><label class='active' for='P" + line + "D" + i + "'>" + days[i - 1] + "</label></div>";
+            $('#projectForm')[0].innerHTML += "<div id='proj" + line + i.toString() + "' class='col s1 input-field'><input type='text' id='P" + line + "D" + i + "'><label class='active' for='P" + line + "D" + i + "'>" + days[i - 1] + "</label></div>";
         }
-        $('#projectForm')[0].innerHTML += "<div class='col input-field'><button data-target='Dialog' class='modal-trigger waves-effect waves-light white-text red lighten-1 btn material-icons' id='delete" + line + "'>delete</button></div></div>";
+        $('#projectForm')[0].innerHTML += "<div id='proj" + line + '8' + "' class='col input-field'><button data-target='Dialog' class='modal-trigger waves-effect waves-light white-text red lighten-1 btn material-icons' id='delete" + line + "'>delete</button></div></div>";
         line++;
     };
 
@@ -32,7 +32,7 @@ $(document).ready(function () {
     };
 
     function addCategory(line) {
-        var cat = "<div class='row'><div class='col s3 input-field'><select id='select" + line + "'>";
+        var cat = "<div id = 'cat" + line + "' class='row'><div class='col s3 input-field'><select id='select" + line + "'>";
         for (var i = 0; i < categories.length; i++) {
             cat += "<option value='" + categories[i] + "'>" + categories[i] + "</option>";
         }
@@ -40,7 +40,7 @@ $(document).ready(function () {
         for (var i = 1; i < days.length + 1; i++) {
             cat += "<div class='col s1 input-field'><input type='text' id='C" + line + "D" + i + "'><label class='active' for='C" + line + "D" + i + "'>" + days[i - 1] + "</label></div>";
         }
-        cat += "<div class='col input-field'><button data-target='Dialog' class='modal-trigger waves-effect waves-light white-text red lighten-1 btn material-icons' id='deleteCat" + line + "'>delete</button></div></div>";
+        cat += "<div  class='col input-field'><button data-target='Dialog' class='modal-trigger waves-effect waves-light white-text red lighten-1 btn material-icons' id='deleteCat" + line + "'>delete</button></div></div>";
         $('#categoriesForm')[0].innerHTML += cat;
         line++;
     };
@@ -75,16 +75,18 @@ $(document).ready(function () {
             else {
                 addProjectToOthers();
             }
+            deleteLine("delete", "proj", projl);
         });
         $('#addCategoriesBtn').click(function () {
             $('select').formSelect('destroy');
             if (catl == 0) {
                 addCategory(catl)
-                catl++;
+                catl++
             }
             else {
                 addCategoryToOthers()
             }
+            deleteLine("deleteCat", "cat", catl);
             $('select').formSelect();
         });
         $('#saveBtn').click(function () {
@@ -97,6 +99,58 @@ $(document).ready(function () {
         });
         $('select').formSelect();
     });
+
+    function deleteLine(id, divId, type) {
+        if (type > 0) {
+            $('button').click(function (event) {
+                for (var i = 0; i < type; i++) {
+                    if (event.target.id == (id + i)) {
+                        if (id == "delete") {
+                            middleDelProj(i,divId,type);
+                            projl--;
+                        }
+                        else {
+                            middleDelCat(i,divId,type);
+                            catl--;
+                        }
+                    }
+                }
+            });
+        }
+    };
+
+    function middleDelProj(boucle , div ,typ){
+        if ((projl > 1) || (boucle != (typ - 1))) {
+            for (var l = boucle; l < typ - 1; l++) {
+                for (var k = 1; k < days.length + 1; k++) {
+                    $("#P" + l + "D" + k)[0].value = $("#P" + (l + 1) + "D" + k)[0].value;
+                }
+            }
+            for (var j = 0; j < 9; j++) {
+                $("#" + (div + (typ - 1) + j))[0].remove();
+            }
+        }
+        else {
+            for (var j = 0; j < 9; j++) {
+                $("#" + (div + boucle + j))[0].remove();
+            }
+        }
+    };
+
+    function middleDelCat(boucle , div ,typ){
+        if ((catl > 1) || (boucle != (typ - 1))) {
+            for (var l = boucle; l < typ - 1; l++) {
+                for (var k = 1; k < days.length + 1; k++) {
+                    $("#C" + l + "D" + k)[0].value = $("#C" + (l + 1) + "D" + k)[0].value;
+                }
+                $("#select" + l)[0].value = $("#select" + (l + 1))[0].value;
+            }
+            $("#" + (div + (typ - 1)))[0].remove();
+        }
+        else {
+            $("#" + (div + i))[0].remove();
+        }
+    };
 
     function intitLocation() {
         var table = "<tr>";
@@ -122,10 +176,8 @@ $(document).ready(function () {
         table += "</tr>";
         $('#locationTable')[0].innerHTML = table;
     };
-
     intitLocation();
     $('.fixed-action-btn').floatingActionButton();
-
     function jsonConstructor() {
         var templateName = $('#templateName')[0].value;
         var id = 0;
@@ -196,7 +248,7 @@ $(document).ready(function () {
                 disp = "<div class='col s12 m4'><div class='card blue-grey darken-1'><div class='card-content white-text'><span class='card-title'>" + JSON.parse(localStorage.getItem(key)).templateName
                     + "</span><p>Template for PSA Time</p></div>"
                     + "<div class='card-action'>"
-                    +"<button class='btn-flat orange-text material-icons' value='" + getId + "' id='edit'>edit</button>"
+                    + "<button class='btn-flat orange-text material-icons' value='" + getId + "' id='edit'>edit</button>"
                     + "<button class='btn-flat orange-text material-icons' value='" + getId + "' id='delete'>delete</button>"
                     + "<button class='btn-flat orange-text material-icons' value='" + getId + "' id='duplicate'>filter_none</button></div></div></div>";
                 $('#templatesBody')[0].innerHTML += disp;
@@ -205,7 +257,6 @@ $(document).ready(function () {
     };
 
     $('button').click(function (event) {
-
         if (event.target.id == 'delete') {
             localStorage.removeItem(event.target.value);
             location.reload();
@@ -306,12 +357,36 @@ $(document).ready(function () {
         editLocationTime(json.location_morn, json.location_after);
     };
 
+    function deleteLineEdit(id, divId, type, json) {
+        deleteLine(id, divId, type);
+        $('button').click(function (event) {
+            if (id == "delete") {
+                for (var i = 0; i < json.projTime.length; i++) {
+                    if (event.target.id == id + i) {
+                        json.projTime.splice(i, 1);
+                    }
+                }
+            }
+            else {
+                for (var i = 0; i < json.time[0].value.length; i++) {
+                    if (event.target.id == id + i) {
+                        json.time[0].value.splice(i, 1);
+                        json.time[1].value.splice(i, 1);
+                    }
+                }
+            }
+
+        });
+    };
+
     function editItem(param) {
         $('#popbtn').trigger('click');
         var tempJson = JSON.parse(localStorage.getItem(param));
         $('#templateName')[0].value = tempJson.templateName;
         displayProject(tempJson);
+        deleteLineEdit("delete", "proj", projl, tempJson);
         displayCategories(tempJson);
+        deleteLineEdit("deleteCat", "cat", catl, tempJson);
         displayLocations(tempJson);
         $('#saveBtn2').click(function () {
             runEdition(tempJson);

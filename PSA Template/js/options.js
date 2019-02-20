@@ -353,7 +353,7 @@ $(document).ready(function () {
 
     function editCatTime(catTime, catName) {
         if (catl > 0) {
-            for (var j = 0; j < catl-1; j++) {
+            for (var j = 0; j < catl - 1; j++) {
                 var CatTab = [];
                 for (var i = 1; i <= days.length; i++) {
                     CatTab.push($("#C" + j + "D" + i)[0].value);
@@ -367,7 +367,7 @@ $(document).ready(function () {
 
     function editProjectTime(projectTab) {
         if (projl > 0) {
-            for (var j = 0; j < projl-1; j++) {
+            for (var j = 0; j < projl - 1; j++) {
                 var projLine = [];
                 for (var i = 1; i <= days.length; i++) {
                     projLine.push($("#P" + j + "D" + i)[0].value);
@@ -395,7 +395,7 @@ $(document).ready(function () {
         editLocationTime(json.location_morn, json.location_after);
     };
 
-    function deleteLineEdit(id, divId,event, json) {
+    function deleteLineEdit(id, divId, event, json) {
         deleteLine(id, divId, event);
         if (id == "delete_") {
             for (var i = 0; i < json.projTime.length; i++) {
@@ -414,6 +414,25 @@ $(document).ready(function () {
         }
     };
 
+    function duplicateLineEdit(id, event, json) {
+        duplicateLine(id, event);
+        if (id == "duplicate_") {
+            for (var i = 0; i < json.projTime.length; i++) {
+                if (event.target.id == id + i) {
+                    json.projTime.push(json.projTime[i]);
+                }
+            }
+        }
+        if (id == "duplicateCat") {
+            for (var i = 0; i < json.time[0].value.length; i++) {
+                if (event.target.id == id + i) {
+                    json.time[0].value.push(json.time[0].value[i]);
+                    json.time[1].value.push(json.time[1].value[i]);
+                }
+            }
+        }
+    }
+
     function editItem(param) {
         $('#popbtn').trigger('click');
         var tempJson = JSON.parse(localStorage.getItem(param));
@@ -422,9 +441,15 @@ $(document).ready(function () {
         $('button[id^=delete_]').click(function (event) {
             deleteLineEdit("delete_", "proj", event, tempJson);
         });
+        $('button[id^=duplicate_]').click(function (event) {
+            duplicateLineEdit("duplicate_", event, tempJson);
+        });
         displayCategories(tempJson);
         $('button[id^=deleteCat]').click(function (event) {
             deleteLineEdit("deleteCat", "cat", event, tempJson);
+        });
+        $('button[id^=duplicateCat]').click(function (event) {
+            duplicateLineEdit("duplicateCat", event, tempJson);
         });
         displayLocations(tempJson);
         $('#saveBtn2').click(function () {

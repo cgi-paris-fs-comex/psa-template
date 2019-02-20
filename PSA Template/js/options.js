@@ -10,8 +10,8 @@ $(document).ready(function () {
         for (var i = 1; i < days.length + 1; i++) {
             proj += "<div class='col s1 input-field'><input type='text' id='P" + line + "D" + i + "'><label class='active' for='P" + line + "D" + i + "'>" + days[i - 1] + "</label></div>";
         }
-        proj += "<div class='col s3 input-field'><button data-target='Dialog' class='modal-trigger waves-effect waves-light white-text red lighten-1 btn material-icons' id='delete" + line + "'>delete</button>"
-            + "<button data-target='Dialog' class='modal-trigger waves-effect waves-light white-text green lighten-1 btn material-icons' id='duplicate" + line + "'>filter_none</button></div></div>";
+        proj += "<div class='col s3 input-field'><button data-target='Dialog' class='modal-trigger waves-effect waves-light white-text red lighten-1 btn material-icons' id='delete_" + line + "'>delete</button>"
+            + "<button data-target='Dialog' class='modal-trigger waves-effect waves-light white-text green lighten-1 btn material-icons' id='duplicate_" + line + "'>filter_none</button></div></div>";
         $('#projectForm')[0].innerHTML += proj;
         projl++;
     };
@@ -75,7 +75,12 @@ $(document).ready(function () {
             else {
                 addProjectToOthers();
             }
-            deleteLine("delete", "proj");
+            $('button[id^="duplicate_"]').click(function (event) {
+                duplicateLine("duplicate_", event);
+            });
+            $('button[id^="delete_"]').click(function (event) {
+                deleteLine("delete_", "proj", event);
+            });
         });
         $('#addCategoriesBtn').click(function () {
             $('select').formSelect('destroy');
@@ -85,7 +90,12 @@ $(document).ready(function () {
             else {
                 addCategoryToOthers()
             }
-            deleteLine("deleteCat", "cat");
+            $('button[id^=deleteCat]').click(function (event) {
+                deleteLine("deleteCat", "cat", event);
+            });
+            $('button[id^=duplicateCat]').click(function (event) {
+                duplicateLine("duplicateCat", event);
+            });
             $('select').formSelect();
         });
         $('#saveBtn').click(function () {
@@ -99,46 +109,41 @@ $(document).ready(function () {
         $('select').formSelect();
     });
 
-    function deleteLine(id, divId) {
-        $('button').click(function (event) {
-            if (id == "delete") {
-                for (var i = 0; i < projl; i++) {
-                    if (event.target.id == (id + i)) {
-
-                        middleDelProj(i, divId);
-                        projl--;
-                    }
+    function deleteLine(id, divId, event) {
+        if (id == "delete_") {
+            for (var i = 0; i < projl; i++) {
+                if (event.target.id == id + i) {
+                    middleDelProj(i, divId);
+                    projl--;
                 }
             }
-
-            else {
-                for (var i = 0; i < catl; i++) {
-                    if (event.target.id == (id + i)) {
-                        middleDelCat(i, divId);
-                        catl--;
-                    }
+        }
+        if (id == "deleteCat") {
+            for (var i = 0; i < catl; i++) {
+                if (event.target.id == id + i) {
+                    middleDelCat(i, divId);
+                    catl--;
                 }
-
             }
-        });
+        }
     };
 
     function middleDelProj(boucle, div) {
         if (projl > 1) {
+            console.log(projl);
             if (boucle != (projl - 1)) {
                 for (var l = boucle; l < projl - 1; l++) {
                     for (var k = 1; k < days.length; k++) {
+                        console.log("#P" + (l + 1) + "D" + k);
                         $("#P" + l + "D" + k)[0].value = $("#P" + (l + 1) + "D" + k)[0].value;
                     }
                 }
             }
             $("#" + (div + (projl - 1)))[0].remove();
-
         }
         else {
 
             $("#" + (div + boucle))[0].remove();
-
         }
     };
 
@@ -149,13 +154,41 @@ $(document).ready(function () {
                     for (var k = 1; k < days.length; k++) {
                         $("#C" + l + "D" + k)[0].value = $("#C" + (l + 1) + "D" + k)[0].value;
                     }
+                    $('select').formSelect('destroy');
                     $("#select" + l)[0].value = $("#select" + (l + 1))[0].value;
+                    $('select').formSelect();
                 }
             }
             $("#" + (div + (catl - 1)))[0].remove();
         }
         else {
             $("#" + (div + boucle))[0].remove();
+        }
+    };
+
+    function duplicateLine(id) {
+        if (id == "duplicate_") {
+            $('#addProjectBtn').trigger('click');
+            for (var i = 0; i < projl - 1; i++) {
+                if (event.target.id == id + i) {
+                    for (var j = 1; j < 8; j++) {
+                        $("#P" + (projl - 1) + "D" + j)[0].value = $("#P" + i + "D" + j)[0].value;
+                    }
+                }
+            }
+        }
+        if (id == "duplicateCat") {
+            $('#addCategoriesBtn').trigger('click');
+            $('select').formSelect('destroy');
+            for (var i = 0; i < catl - 1; i++) {
+                if (event.target.id == id + i) {
+                    for (var j = 1; j < 8; j++) {
+                        $("#C" + (catl - 1) + "D" + j)[0].value = $("#C" + i + "D" + j)[0].value;
+                        $("#select" + (catl - 1))[0].value = $("#select" + i)[0].value;
+                    }
+                }
+            }
+            $('select').formSelect();
         }
     };
 
@@ -281,7 +314,6 @@ $(document).ready(function () {
 
     function displayCategories(json) {
         if (json.time[0].value.length > 0) {
-            catl = json.time[0].value.length;
             for (var i = 0; i < json.time[0].value.length; i++) {
                 addCategory(i)
             }
@@ -298,7 +330,6 @@ $(document).ready(function () {
 
     function displayProject(json) {
         if (json.projTime.length > 0) {
-            projl = json.projTime.length;
             for (var i = 0; i < json.projTime.length; i++) {
                 addProject(i)
             }
@@ -322,7 +353,7 @@ $(document).ready(function () {
 
     function editCatTime(catTime, catName) {
         if (catl > 0) {
-            for (var j = 0; j < catl; j++) {
+            for (var j = 0; j < catl-1; j++) {
                 var CatTab = [];
                 for (var i = 1; i <= days.length; i++) {
                     CatTab.push($("#C" + j + "D" + i)[0].value);
@@ -336,7 +367,7 @@ $(document).ready(function () {
 
     function editProjectTime(projectTab) {
         if (projl > 0) {
-            for (var j = 0; j < projl; j++) {
+            for (var j = 0; j < projl-1; j++) {
                 var projLine = [];
                 for (var i = 1; i <= days.length; i++) {
                     projLine.push($("#P" + j + "D" + i)[0].value);
@@ -364,26 +395,23 @@ $(document).ready(function () {
         editLocationTime(json.location_morn, json.location_after);
     };
 
-    function deleteLineEdit(id, divId, json) {
-        deleteLine(id, divId);
-        $('button').click(function (event) {
-            if (id == "delete") {
-                for (var i = 0; i < json.projTime.length; i++) {
-                    if (event.target.id == id + i) {
-                        json.projTime.splice(i, 1);
-                    }
+    function deleteLineEdit(id, divId,event, json) {
+        deleteLine(id, divId, event);
+        if (id == "delete_") {
+            for (var i = 0; i < json.projTime.length; i++) {
+                if (event.target.id == id + i) {
+                    json.projTime.splice(i, 1);
                 }
             }
-            else {
-                for (var i = 0; i < json.time[0].value.length; i++) {
-                    if (event.target.id == id + i) {
-                        json.time[0].value.splice(i, 1);
-                        json.time[1].value.splice(i, 1);
-                    }
+        }
+        if (id == "deleteCat") {
+            for (var i = 0; i < json.time[0].value.length; i++) {
+                if (event.target.id == id + i) {
+                    json.time[0].value.splice(i, 1);
+                    json.time[1].value.splice(i, 1);
                 }
             }
-
-        });
+        }
     };
 
     function editItem(param) {
@@ -391,9 +419,13 @@ $(document).ready(function () {
         var tempJson = JSON.parse(localStorage.getItem(param));
         $('#templateName')[0].value = tempJson.templateName;
         displayProject(tempJson);
-        deleteLineEdit("delete", "proj", tempJson);
+        $('button[id^=delete_]').click(function (event) {
+            deleteLineEdit("delete_", "proj", event, tempJson);
+        });
         displayCategories(tempJson);
-        deleteLineEdit("deleteCat", "cat", tempJson);
+        $('button[id^=deleteCat]').click(function (event) {
+            deleteLineEdit("deleteCat", "cat", event, tempJson);
+        });
         displayLocations(tempJson);
         $('#saveBtn2').click(function () {
             runEdition(tempJson);
@@ -412,4 +444,5 @@ $(document).ready(function () {
         tempJ.id = id;
         storeJson(JSON.stringify(tempJ));
     };
+
 });

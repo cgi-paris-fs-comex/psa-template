@@ -353,7 +353,7 @@ $(document).ready(function () {
 
     function editCatTime(catTime, catName) {
         if (catl > 0) {
-            for (var j = 0; j < catl - 1; j++) {
+            for (var j = 0; j < catl; j++) {
                 var CatTab = [];
                 for (var i = 1; i <= days.length; i++) {
                     CatTab.push($("#C" + j + "D" + i)[0].value);
@@ -367,7 +367,7 @@ $(document).ready(function () {
 
     function editProjectTime(projectTab) {
         if (projl > 0) {
-            for (var j = 0; j < projl - 1; j++) {
+            for (var j = 0; j < projl; j++) {
                 var projLine = [];
                 for (var i = 1; i <= days.length; i++) {
                     projLine.push($("#P" + j + "D" + i)[0].value);

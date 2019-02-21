@@ -13,18 +13,31 @@
 </head>
 
 <body>
+    <div class="navbar-fixed">
+        <nav>
+            <div class="nav-wrapper red">
+                <a href="#!" class="black-text brand-logo">Options</a>
+                <ul class="right">
+                    <select id="lang">
+                        <option value='' disabled selected>Select Lang</option>
+                        <option value="fr">Français</option>
+                        <option value="en">English</option>
+                    </select>
+                </ul>
+            </div>
+        </nav>
+    </div>
     <div class="row">
-        <h1>Options</h1>
         <div id="templatesBody" class='row'>
 
         </div>
         <div class="modal modal-fixed-footer" id="Dialog">
             <div class="modal-content">
                 <div class="row col s12">
-                    <input id="templateName" type="text" placeholder="template name">
+                    <input id="templateName" type="text">
                 </div>
                 <div id="projectForm">
-                    <h5>Projects</h5>
+                    <h5 id="projectTitle">Projects</h5>
                 </div>
                 <div class="row">
                     <div class="right">
@@ -34,7 +47,7 @@
                     </div>
                 </div>
                 <div id="categoriesForm">
-                    <h5>Other activites</h5>
+                    <h5 id="activitesTitle">Other activites</h5>
                 </div>
                 <div class="row">
                     <div class="right">
@@ -49,7 +62,7 @@
             </div>
             <div class="modal-footer">
                 <button class="modal-close waves-effect waves-green btn green" id="saveBtn">OK</button>
-                <button class="modal-close waves-effect waves-red btn red" id="closeBtn">Cancel</button>
+                <button class="modal-close waves-effect waves-red btn red" id="closeBtn"></button>
             </div>
         </div>
 

@@ -1,4 +1,5 @@
 chrome.runtime.sendMessage({ "message": "activate_icon" });
+
 /* Configuration */
 var caTime;
 var projectTime;

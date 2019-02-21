@@ -10,29 +10,33 @@ $(document).ready(function () {
                     var locationTab_after = [];
                     var cat = options.time[1].value;
                     var time = options.time[0].value;
-                    for(var i = 0; i<options.projTime.length; i++){
-                        time.push(options.projTime[i]);
-                        cat.push("projet");
-                    }
-                    for (var i = 0; i < options.location_morn.length; i++) {
-                        for (var j = 0; j < locations.length; j++) {
-                            if (options.location_morn[i] == locations[j].value) {
-                                locationTab_morn.push(locations[j].label);
-                            }
-                            if (options.location_after[i] == locations[j].value) {
-                                locationTab_after.push(locations[j].label);
-                            }
+                    if (options.projTime.length > 0) {
+                        for (var i = 0; i < options.projTime.length; i++) {
+                            time.push(options.projTime[i]);
                         }
+                        cat.push(projectTtitle.split('s')[0]);
                     }
+                    getLocations(locationTab_morn, locationTab_after, options);
                 }
-                console.log(options);
-                disp.innerHTML += "<button class='btn-flat waves-effect waves-red' id='" + options.id + "' title='time:" + time + "h| location_morn:" + locationTab_morn + "|location_afer:" + locationTab_after + "|category:" + cat + "'>" + options.templateName + "</button>";
+                disp.innerHTML += "<button class='btn-flat waves-effect waves-red' id='" + options.id
+                    + "' title='time:" + time + "h| location_morn:" + locationTab_morn + "|location_afer:" + locationTab_after
+                    + "|Activities:" + cat + "'>" + options.templateName + "</button>";
             }
         }
-    }
+    };
 
-
-
+    function getLocations(morning, afternoon, json) {
+        for (var i = 0; i < json.location_morn.length; i++) {
+            for (var j = 0; j < locations.length; j++) {
+                if (json.location_morn[i] == locations[j].value) {
+                    morning.push(locations[j].label);
+                }
+                if (json.location_after[i] == locations[j].value) {
+                    afternoon.push(locations[j].label);
+                }
+            }
+        }
+    };
     displayBtn();
     /* Send the templates informations to page.js */
     $('button').click(function (event) {

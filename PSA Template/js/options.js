@@ -1,17 +1,19 @@
 console.log("on options");
 $(document).ready(function () {
+    saveLang();
     if (localStorage.length != 0) {
+        $('select').formSelect();
         displayTemplate();
     }
     var catl = 0;
     var projl = 0;
     function addProject(line) {
-        var proj = "<div id='proj" + line + "' class='row'><div  class='col s2 input-field'><input type='text' class='validate' disabled value='Project" + line + "'></div>";
+        var proj = "<div id='proj" + line + "' class='row'><div  class='col s2 input-field'><input type='text' class='validate' disabled value='"+ projectTtitle.split('s')[0]+" "+ line + "'></div>";
         for (var i = 1; i < days.length + 1; i++) {
             proj += "<div class='col s1 input-field'><input type='text' id='P" + line + "D" + i + "'><label class='active' for='P" + line + "D" + i + "'>" + days[i - 1] + "</label></div>";
         }
         proj += "<div class='col s3 input-field'><button data-target='Dialog' class='modal-trigger waves-effect waves-light white-text red lighten-1 btn material-icons' id='delete_" + line + "'>delete</button>"
-            + "<button data-target='Dialog' class='modal-trigger waves-effect waves-light white-text green lighten-1 btn material-icons' id='duplicate_" + line + "'>filter_none</button></div></div>";
+            + "<button data-target='Dialog' class='modal-trigger waves-effect waves-light white-text lighten-1 btn material-icons' id='duplicate_" + line + "'>filter_none</button></div></div>";
         $('#projectForm')[0].innerHTML += proj;
         projl++;
     };
@@ -32,8 +34,8 @@ $(document).ready(function () {
         }
     };
 
-    function addCategory(line) {
-        var cat = "<div id = 'cat" + line + "' class='row'><div class='col s2 input-field'><select id='select" + line + "'>";
+    function addCategory(line, activitieChoice) {
+        var cat = "<div id = 'cat" + line + "' class='row'><div class='col s2 input-field'><select id='select" + line + "'><option id='choice' value='' disabled selected>"+activitieChoice+"</option>";
         for (var i = 0; i < categories.length; i++) {
             cat += "<option value='" + categories[i] + "'>" + categories[i] + "</option>";
         }
@@ -42,7 +44,7 @@ $(document).ready(function () {
             cat += "<div class='col s1 input-field'><input type='text' id='C" + line + "D" + i + "'><label class='active' for='C" + line + "D" + i + "'>" + days[i - 1] + "</label></div>";
         }
         cat += "<div  class='col s3 input-field'><button data-target='Dialog' class='modal-trigger waves-effect waves-light white-text red lighten-1 btn material-icons' id='deleteCat" + line + "'>delete</button>"
-            + "<button data-target='Dialog' class='modal-trigger waves-effect waves-light white-text green lighten-1 btn material-icons' id='duplicateCat" + line + "'>filter_none</button>";
+            + "<button data-target='Dialog' class='modal-trigger waves-effect waves-light white-text lighten-1 btn material-icons' id='duplicateCat" + line + "'>filter_none</button>";
         $('#categoriesForm')[0].innerHTML += cat;
         catl++;
     };
@@ -57,7 +59,7 @@ $(document).ready(function () {
             }
             temp2.push($("#select" + i)[0].value);
         }
-        addCategory(catl)
+        addCategory(catl,optionActivite)
         for (var i = 0; i < catl - 1; i++) {
             for (var j = 0; j < 7; j++) {
                 $("#C" + i + "D" + (j + 1))[0].value = temp[i][j];
@@ -68,11 +70,17 @@ $(document).ready(function () {
 
     $('#popbtn').click(function () {
         $('.modal').modal({
-             dismissible: false
+            dismissible: false
         });
+        var project = projectTtitle.toString();
+        var activites = activititesTitle.toString();
+        $('#projectTitle')[0].innerHTML = project;
+        $('#activitesTitle')[0].innerHTML = activites;
+        $('#templateName')[0].placeholder = templatePlaceholder;
+        $('#closeBtn')[0].innerHTML = cancelBtn;
         $('#addProjectBtn').click(function () {
             if (projl == 0) {
-                addProject(projl)
+                addProject(projl);
             }
             else {
                 addProjectToOthers();
@@ -87,10 +95,10 @@ $(document).ready(function () {
         $('#addCategoriesBtn').click(function () {
             $('select').formSelect('destroy');
             if (catl == 0) {
-                addCategory(catl)
+                addCategory(catl,optionActivite);
             }
             else {
-                addCategoryToOthers()
+                addCategoryToOthers();
             }
             $('button[id^=deleteCat]').click(function (event) {
                 deleteLine("deleteCat", "cat", event);
@@ -132,11 +140,9 @@ $(document).ready(function () {
 
     function middleDelProj(boucle, div) {
         if (projl > 1) {
-            console.log(projl);
             if (boucle != (projl - 1)) {
                 for (var l = boucle; l < projl - 1; l++) {
                     for (var k = 1; k < days.length; k++) {
-                        console.log("#P" + (l + 1) + "D" + k);
                         $("#P" + l + "D" + k)[0].value = $("#P" + (l + 1) + "D" + k)[0].value;
                     }
                 }
@@ -285,7 +291,7 @@ $(document).ready(function () {
     function displayTemplate() {
         var disp;
         for (var key in localStorage) {
-            if (localStorage.getItem(key) != null) {
+            if ((localStorage.getItem(key) != null) && (key != 'lang')) {
                 var getId = JSON.parse(localStorage.getItem(key)).id;
                 disp = "<div class='col s12 m4'><div class='card blue-grey darken-1'><div class='card-content white-text'><span class='card-title'>" + JSON.parse(localStorage.getItem(key)).templateName
                     + "</span><p>Template for PSA Time</p></div>"
@@ -317,7 +323,7 @@ $(document).ready(function () {
     function displayCategories(json) {
         if (json.time[0].value.length > 0) {
             for (var i = 0; i < json.time[0].value.length; i++) {
-                addCategory(i)
+                addCategory(i,optionActivite);
             }
             for (var i = 0; i < json.time[0].value.length; i++) {
                 $('select').formSelect();

@@ -67,7 +67,9 @@ $(document).ready(function () {
     };
 
     $('#popbtn').click(function () {
-        $('.modal').modal();
+        $('.modal').modal({
+             dismissible: false
+        });
         $('#addProjectBtn').click(function () {
             if (projl == 0) {
                 addProject(projl)

@@ -7,6 +7,10 @@ function saveLang() {
 			optionActivite: "choose your activitie",
 			projectTtitle: "Projects",
 			cancelBtn: "Cancel",
+			timeName: "Time :",
+			locationMornName: "Location Morning :",
+			locationAfterName: "Location Afternoon :",
+			activitiesName: "Activites :",
 			categories: [
 				"Abs. autorisée non rémunérée",
 				"Absc non autoriséee non payée",
@@ -64,7 +68,7 @@ function saveLang() {
 				"Vacances (Congés payés)"
 			],
 			days: ["sunday", "monday", "tuesday", "wednesday", "thursday", "friday", "saturday"],
-			locations : [
+			locations: [
 				{ value: 'O', label: 'CGI' },
 				{ value: 'C', label: 'Customer' },
 				{ value: 'T', label: 'Teleworking' },
@@ -85,6 +89,10 @@ function saveLang() {
 							projectTtitle: "Projets",
 							optionActivite: "choisissez votre activité",
 							cancelBtn: "Annuler",
+							timeName: "Temps :",
+							locationMornName: "Lieu Matin :",
+							locationAfterName: "Lieu Après-midi :",
+							activitiesName: "Activités :",
 							categories: [
 								"Abs. autorisée non rémunérée",
 								"Absc non autoriséee non payée",
@@ -142,7 +150,7 @@ function saveLang() {
 								"Vacances (Congés payés)"
 							],
 							days: ["dimanche", "lundi", "mardi", "mercredi", "jeudi", "vendredi", "samedi"],
-							locations : [
+							locations: [
 								{ value: 'O', label: 'CGI' },
 								{ value: 'C', label: 'Client' },
 								{ value: 'T', label: 'Télétravail' },
@@ -160,6 +168,10 @@ function saveLang() {
 							projectTtitle: "Projects",
 							optionActivite: "choose your activitie",
 							cancelBtn: "Cancel",
+							timeName: "Time :",
+							locationMornName: "Location Morning :",
+							locationAfterName: "Location Afternoon :",
+							activitiesName: "Activites :",
 							categories: [
 								"Abs. autorisée non rémunérée",
 								"Absc non autoriséee non payée",
@@ -217,7 +229,7 @@ function saveLang() {
 								"Vacances (Congés payés)"
 							],
 							days: ["sunday", "monday", "tuesday", "wednesday", "thursday", "friday", "saturday"],
-							locations : [
+							locations: [
 								{ value: 'O', label: 'CGI' },
 								{ value: 'C', label: 'Customer' },
 								{ value: 'T', label: 'Teleworking' },
@@ -238,6 +250,10 @@ var lang = JSON.parse(localStorage.getItem('lang'));
 var templatePlaceholder = lang.templatePlaceholder;
 var projectTtitle = lang.projectTtitle;
 var activititesTitle = lang.activititesTitle;
+var timeName = lang.timeName;
+var locationMornName = lang.locationMornName;
+var locationAfterName = lang.locationAfterName;
+var activitiesName = lang.activitiesName;
 var optionActivite = lang.optionActivite;
 var cancelBtn = lang.cancelBtn;
 var categories = lang.categories;

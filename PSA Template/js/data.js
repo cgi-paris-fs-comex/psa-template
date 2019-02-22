@@ -69,13 +69,14 @@ function saveLang() {
 			],
 			days: ["sunday", "monday", "tuesday", "wednesday", "thursday", "friday", "saturday"],
 			locations: [
+				{ value: 'NA', label: 'N/A' },
 				{ value: 'O', label: 'CGI' },
 				{ value: 'C', label: 'Customer' },
 				{ value: 'T', label: 'Teleworking' },
-				{ value: 'NA', label: 'N/A' },
 			]
 		};
 		localStorage.setItem('lang', JSON.stringify(langJson));
+		location.reload();
 	}
 	else {
 		$(document).ready(function () {
@@ -151,10 +152,10 @@ function saveLang() {
 							],
 							days: ["dimanche", "lundi", "mardi", "mercredi", "jeudi", "vendredi", "samedi"],
 							locations: [
+								{ value: 'NA', label: 'N/A' },
 								{ value: 'O', label: 'CGI' },
 								{ value: 'C', label: 'Client' },
 								{ value: 'T', label: 'Télétravail' },
-								{ value: 'NA', label: 'N/A' },
 							]
 						};
 						localStorage.setItem('lang', JSON.stringify(langJson));
@@ -230,10 +231,10 @@ function saveLang() {
 							],
 							days: ["sunday", "monday", "tuesday", "wednesday", "thursday", "friday", "saturday"],
 							locations: [
+								{ value: 'NA', label: 'N/A' },
 								{ value: 'O', label: 'CGI' },
 								{ value: 'C', label: 'Customer' },
 								{ value: 'T', label: 'Teleworking' },
-								{ value: 'NA', label: 'N/A' },
 							]
 						};
 					}

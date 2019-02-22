@@ -96,6 +96,5 @@ function startContentScript(message) {
 	if (restTable.length != 0) {
 		updateRestLunchLocation();
 	}
-
 }
 

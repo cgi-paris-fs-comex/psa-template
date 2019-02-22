@@ -2,7 +2,7 @@ $(document).ready(function () {
     /* Display all templates */
     function displayBtn() {
         for (var key in localStorage) {
-            if (key.length < 3) {
+            if (Number.isInteger(parseInt(key))) {
                 if (localStorage.getItem(key) != null) {
                     var options = JSON.parse(localStorage.getItem(key));
                     disp = document.getElementById('savedBtn');
@@ -30,13 +30,11 @@ $(document).ready(function () {
                 if(json.time[0].value[i][j] != ''){
                 day += parseFloat(json.time[0].value[i][j]);
                 }
-                console.log("activité"+day);
             }
             for (var i = 0; i < json.projTime.length; i++) {
                 if(json.projTime[i][j] != ''){
                     day += parseFloat(json.projTime[i][j]);
                 }    
-                console.log("projet"+day);
             }
             time.push(days[j] + ": " + day + " h");
         }

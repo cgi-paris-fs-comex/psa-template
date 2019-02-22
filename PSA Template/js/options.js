@@ -202,11 +202,11 @@ $(document).ready(function () {
     };
 
     function intitLocation() {
-        var table = "<tr>";
+        var table = "<tr><th>"+locationTitle+"</th>";
         for (var i = 0; i < days.length; i++) {
             table += "<th>" + days[i] + "</th>";
         }
-        table += "</tr><tr>";
+        table += "</tr><tr><td><div class='input-field col s12'>"+Morning+"</td>";
         for (var i = 0; i < days.length; i++) {
             table += "<td> <div class='input-field col s12'> <select id='select-" + days[i] + "-morning'>";
             for (var j = 0; j < locations.length; j++) {
@@ -214,7 +214,7 @@ $(document).ready(function () {
             }
             table += "</select></div></td>";
         }
-        table += "</tr><tr>";
+        table += "</tr><tr><td><div class='input-field col s12'>"+Afternoon+"</td>";
         for (var i = 0; i < days.length; i++) {
             table += "<td> <div class='input-field col s12'> <select id='select-" + days[i] + "-afternoon'>";
             for (var j = 0; j < locations.length; j++) {
@@ -297,7 +297,7 @@ $(document).ready(function () {
                 disp = "<div class='col s12 m4'><div class='card blue-grey darken-1'><div class='card-content white-text'><span class='card-title'>" + JSON.parse(localStorage.getItem(key)).templateName
                     + "</span><p>Template for PSA Time</p></div>"
                     + "<div class='card-action'>"
-                    + "<a  id='edit'><i id='edit " + getId + "' class='material-icons'>edit</i></a>"
+                    + "<a data-target='Dialog' class='modal-trigger' id='edit'><i id='edit " + getId + "' class='material-icons'>edit</i></a>"
                     + "<a  id='delete'><i id='delete " + getId + "' class='material-icons'>delete</i></a>"
                     + "<a  id='duplicate'><i id='duplicate " + getId + "' class='material-icons'>filter_none</i></a></div></div></div>";
                 $('#templatesBody')[0].innerHTML += disp;

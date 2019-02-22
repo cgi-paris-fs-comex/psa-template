@@ -1,4 +1,5 @@
 chrome.runtime.sendMessage({ "message": "activate_icon" });
+
 /* Configuration */
 var caTime;
 var projectTime;
@@ -95,6 +96,5 @@ function startContentScript(message) {
 	if (restTable.length != 0) {
 		updateRestLunchLocation();
 	}
-
 }
 

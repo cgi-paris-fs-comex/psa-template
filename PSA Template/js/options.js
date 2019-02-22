@@ -1,17 +1,20 @@
 console.log("on options");
 $(document).ready(function () {
+    saveLang();
     if (localStorage.length != 0) {
+        $('select').formSelect();
+        $('.dropdown-trigger')[0].style = "color: white;";
         displayTemplate();
     }
     var catl = 0;
     var projl = 0;
     function addProject(line) {
-        var proj = "<div id='proj" + line + "' class='row'><div  class='col s2 input-field'><input type='text' class='validate' disabled value='Project" + line + "'></div>";
+        var proj = "<div id='proj" + line + "' class='row'><div  class='col s2 input-field'><input type='text' class='validate' disabled value='"+ projectTtitle.split('s')[0]+" "+ line + "'></div>";
         for (var i = 1; i < days.length + 1; i++) {
             proj += "<div class='col s1 input-field'><input type='text' id='P" + line + "D" + i + "'><label class='active' for='P" + line + "D" + i + "'>" + days[i - 1] + "</label></div>";
         }
-        proj += "<div class='col s3 input-field'><button data-target='Dialog' class='modal-trigger waves-effect waves-light white-text red lighten-1 btn material-icons' id='delete_" + line + "'>delete</button>"
-            + "<button data-target='Dialog' class='modal-trigger waves-effect waves-light white-text green lighten-1 btn material-icons' id='duplicate_" + line + "'>filter_none</button></div></div>";
+        proj += "<div class='col input-field'><a class='waves-effect waves-light white-text red lighten-1 btn' id='delete_" + line + "'><i id='delete_" + line + "' class='material-icons'>delete</i></a>"
+            + " <a class='waves-effect waves-light white-text lighten-1 btn' id='duplicate_" + line + "'><i id='duplicate_" + line + "' class='material-icons'>filter_none</i></a></div></div>";
         $('#projectForm')[0].innerHTML += proj;
         projl++;
     };
@@ -32,8 +35,8 @@ $(document).ready(function () {
         }
     };
 
-    function addCategory(line) {
-        var cat = "<div id = 'cat" + line + "' class='row'><div class='col s2 input-field'><select id='select" + line + "'>";
+    function addCategory(line, activitieChoice) {
+        var cat = "<div id = 'cat" + line + "' class='row'><div class='col s3 input-field'><select id='select" + line + "'><option id='choice' value='' disabled selected>"+activitieChoice+"</option>";
         for (var i = 0; i < categories.length; i++) {
             cat += "<option value='" + categories[i] + "'>" + categories[i] + "</option>";
         }
@@ -41,8 +44,8 @@ $(document).ready(function () {
         for (var i = 1; i < days.length + 1; i++) {
             cat += "<div class='col s1 input-field'><input type='text' id='C" + line + "D" + i + "'><label class='active' for='C" + line + "D" + i + "'>" + days[i - 1] + "</label></div>";
         }
-        cat += "<div  class='col s3 input-field'><button data-target='Dialog' class='modal-trigger waves-effect waves-light white-text red lighten-1 btn material-icons' id='deleteCat" + line + "'>delete</button>"
-            + "<button data-target='Dialog' class='modal-trigger waves-effect waves-light white-text green lighten-1 btn material-icons' id='duplicateCat" + line + "'>filter_none</button>";
+        cat += "<div  class='col input-field'><a class='waves-effect waves-light white-text red lighten-1 btn' id='deleteCat" + line + "'><i id='deleteCat" + line + "' class='material-icons'>delete</i></a>"
+            + " <a class='waves-effect waves-light white-text lighten-1 btn' id='duplicateCat" + line + "'><i id='duplicateCat" + line + "' class='material-icons'>filter_none</i></a>";
         $('#categoriesForm')[0].innerHTML += cat;
         catl++;
     };
@@ -57,7 +60,7 @@ $(document).ready(function () {
             }
             temp2.push($("#select" + i)[0].value);
         }
-        addCategory(catl)
+        addCategory(catl,optionActivite)
         for (var i = 0; i < catl - 1; i++) {
             for (var j = 0; j < 7; j++) {
                 $("#C" + i + "D" + (j + 1))[0].value = temp[i][j];
@@ -68,34 +71,40 @@ $(document).ready(function () {
 
     $('#popbtn').click(function () {
         $('.modal').modal({
-             dismissible: false
+            dismissible: false
         });
+        var project = projectTtitle.toString();
+        var activites = activititesTitle.toString();
+        $('#projectTitle')[0].innerHTML = project;
+        $('#activitesTitle')[0].innerHTML = activites;
+        $('#templateName')[0].placeholder = templatePlaceholder;
+        $('#closeBtn')[0].innerHTML = cancelBtn;
         $('#addProjectBtn').click(function () {
             if (projl == 0) {
-                addProject(projl)
+                addProject(projl);
             }
             else {
                 addProjectToOthers();
             }
-            $('button[id^="duplicate_"]').click(function (event) {
+            $('a[id^="duplicate_"]').click(function (event) {
                 duplicateLine("duplicate_", event);
             });
-            $('button[id^="delete_"]').click(function (event) {
+            $('a[id^="delete_"]').click(function (event) {
                 deleteLine("delete_", "proj", event);
             });
         });
         $('#addCategoriesBtn').click(function () {
             $('select').formSelect('destroy');
             if (catl == 0) {
-                addCategory(catl)
+                addCategory(catl,optionActivite);
             }
             else {
-                addCategoryToOthers()
+                addCategoryToOthers();
             }
-            $('button[id^=deleteCat]').click(function (event) {
+            $('a[id^=deleteCat]').click(function (event) {
                 deleteLine("deleteCat", "cat", event);
             });
-            $('button[id^=duplicateCat]').click(function (event) {
+            $('a[id^=duplicateCat]').click(function (event) {
                 duplicateLine("duplicateCat", event);
             });
             $('select').formSelect();
@@ -114,7 +123,7 @@ $(document).ready(function () {
     function deleteLine(id, divId, event) {
         if (id == "delete_") {
             for (var i = 0; i < projl; i++) {
-                if (event.target.id == id + i) {
+                if (event.target.id == id + i) {    
                     middleDelProj(i, divId);
                     projl--;
                 }
@@ -132,11 +141,9 @@ $(document).ready(function () {
 
     function middleDelProj(boucle, div) {
         if (projl > 1) {
-            console.log(projl);
             if (boucle != (projl - 1)) {
                 for (var l = boucle; l < projl - 1; l++) {
                     for (var k = 1; k < days.length; k++) {
-                        console.log("#P" + (l + 1) + "D" + k);
                         $("#P" + l + "D" + k)[0].value = $("#P" + (l + 1) + "D" + k)[0].value;
                     }
                 }
@@ -195,25 +202,25 @@ $(document).ready(function () {
     };
 
     function intitLocation() {
-        var table = "<tr>";
+        var table = "<tr><th>"+locationTitle+"</th>";
         for (var i = 0; i < days.length; i++) {
             table += "<th>" + days[i] + "</th>";
         }
-        table += "</tr><tr>";
+        table += "</tr><tr><td><div class='input-field col s12'>"+Morning+"</td>";
         for (var i = 0; i < days.length; i++) {
             table += "<td> <div class='input-field col s12'> <select id='select-" + days[i] + "-morning'>";
-            for (var j = 0; j < locations.length - 1; j++) {
+            for (var j = 0; j < locations.length; j++) {
                 table += "<option value='" + locations[j].value + "'>" + locations[j].label + "</option>";
             }
-            table += "<option selected value='" + locations[3].value + "'>" + locations[3].label + "</option></select></div></td>";
+            table += "</select></div></td>";
         }
-        table += "</tr><tr>";
+        table += "</tr><tr><td><div class='input-field col s12'>"+Afternoon+"</td>";
         for (var i = 0; i < days.length; i++) {
             table += "<td> <div class='input-field col s12'> <select id='select-" + days[i] + "-afternoon'>";
-            for (var j = 0; j < locations.length - 1; j++) {
+            for (var j = 0; j < locations.length; j++) {
                 table += "<option value='" + locations[j].value + "'>" + locations[j].label + "</option>";
             }
-            table += "<option selected value='" + locations[3].value + "'>" + locations[3].label + "</option></select></div></td>";
+            table += "</select></div></td>";
         }
         table += "</tr>";
         $('#locationTable')[0].innerHTML = table;
@@ -285,31 +292,33 @@ $(document).ready(function () {
     function displayTemplate() {
         var disp;
         for (var key in localStorage) {
-            if (localStorage.getItem(key) != null) {
+            if ((localStorage.getItem(key) != null) && (key != 'lang')) {
                 var getId = JSON.parse(localStorage.getItem(key)).id;
                 disp = "<div class='col s12 m4'><div class='card blue-grey darken-1'><div class='card-content white-text'><span class='card-title'>" + JSON.parse(localStorage.getItem(key)).templateName
                     + "</span><p>Template for PSA Time</p></div>"
                     + "<div class='card-action'>"
-                    + "<button class='btn-flat orange-text material-icons' value='" + getId + "' id='edit'>edit</button>"
-                    + "<button class='btn-flat orange-text material-icons' value='" + getId + "' id='delete'>delete</button>"
-                    + "<button class='btn-flat orange-text material-icons' value='" + getId + "' id='duplicate'>filter_none</button></div></div></div>";
+                    + "<a data-target='Dialog' class='modal-trigger' id='edit'><i id='edit " + getId + "' class='material-icons'>edit</i></a>"
+                    + "<a  id='delete'><i id='delete " + getId + "' class='material-icons'>delete</i></a>"
+                    + "<a  id='duplicate'><i id='duplicate " + getId + "' class='material-icons'>filter_none</i></a></div></div></div>";
                 $('#templatesBody')[0].innerHTML += disp;
             }
         }
     };
 
-    $('button').click(function (event) {
-        if (event.target.id == 'delete') {
-            localStorage.removeItem(event.target.value);
+    $('a').click(function (event) {
+        var id = event.target.id.split(' ')[0];
+        var value =event.target.id.split(' ')[1];
+        if (id == 'delete') {
+            localStorage.removeItem(value);
             location.reload();
         }
-        if (event.target.id == 'edit') {
-            $('.modal-footer')[0].innerHTML = "<button class='modal-close waves-effect waves-green btn green' id='saveBtn2'>OK</button>"
-                + "<button class='modal-close waves-effect waves-red btn red' id='closeBtn'>Cancel</button>"
-            editItem(event.target.value);
+        if (id == 'edit') {
+            $('.modal-footer')[0].innerHTML = "<a class='modal-close waves-effect waves-green btn green' id='saveBtn2'>OK</a>"
+                + " <a class='modal-close waves-effect waves-red btn red' id='closeBtn'>"+cancelBtn+"</a>"
+            editItem(value);
         }
-        if (event.target.id == "duplicate") {
-            duplicateItem(event.target.value);
+        if (id == "duplicate") {
+            duplicateItem(value);
             location.reload();
         }
     });
@@ -317,7 +326,7 @@ $(document).ready(function () {
     function displayCategories(json) {
         if (json.time[0].value.length > 0) {
             for (var i = 0; i < json.time[0].value.length; i++) {
-                addCategory(i)
+                addCategory(i,optionActivite);
             }
             for (var i = 0; i < json.time[0].value.length; i++) {
                 $('select').formSelect();
@@ -440,17 +449,17 @@ $(document).ready(function () {
         var tempJson = JSON.parse(localStorage.getItem(param));
         $('#templateName')[0].value = tempJson.templateName;
         displayProject(tempJson);
-        $('button[id^=delete_]').click(function (event) {
+        $('a[id^=delete_]').click(function (event) {
             deleteLineEdit("delete_", "proj", event, tempJson);
         });
-        $('button[id^=duplicate_]').click(function (event) {
+        $('a[id^=duplicate_]').click(function (event) {
             duplicateLineEdit("duplicate_", event, tempJson);
         });
         displayCategories(tempJson);
-        $('button[id^=deleteCat]').click(function (event) {
+        $('a[id^=deleteCat]').click(function (event) {
             deleteLineEdit("deleteCat", "cat", event, tempJson);
         });
-        $('button[id^=duplicateCat]').click(function (event) {
+        $('a[id^=duplicateCat]').click(function (event) {
             duplicateLineEdit("duplicateCat", event, tempJson);
         });
         displayLocations(tempJson);

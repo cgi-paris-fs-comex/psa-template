@@ -13,34 +13,46 @@
 </head>
 
 <body>
-    <div class="row">
-        <h1>Options</h1>
-        <div id="templatesBody" class='row'>
-
+    <div class="navbar-fixed">
+        <nav>
+            <div class="nav-wrapper red">
+                <a href="#!" class="brand-logo">Options</a>
+                <ul class="right">
+                    <select id="lang">
+                        <option value='' disabled selected>Select Lang</option>
+                        <option value="fr">Français</option>
+                        <option value="en">English</option>
+                    </select>
+                </ul>
+            </div>
+        </nav>
+    </div>
+    <div class="container">
+            <div id="templatesBody" class='row'>
+            </div>
         </div>
         <div class="modal modal-fixed-footer" id="Dialog">
             <div class="modal-content">
                 <div class="row col s12">
-                    <input id="templateName" type="text" placeholder="template name">
+                    <input id="templateName" type="text">
                 </div>
                 <div id="projectForm">
-                    <h5>Projects</h5>
+                    <h5 id="projectTitle">Projects</h5>
                 </div>
                 <div class="row">
                     <div class="right">
-                        <button data-target="Dialog"
-                            class="btn-floating waves-effect waves-light blue lighten-1 material-icons modal-trigger"
-                            id="addProjectBtn">add</button>
+                        <a data-target="Dialog"
+                            class="btn-floating waves-effect waves-light blue lighten-1 material-icons"
+                            id="addProjectBtn"><i class='material-icons'>add</i></a>
                     </div>
                 </div>
                 <div id="categoriesForm">
-                    <h5>Other activites</h5>
+                    <h5 id="activitesTitle">Other activites</h5>
                 </div>
                 <div class="row">
                     <div class="right">
-                        <button data-target="Dialog"
-                            class="btn-floating waves-effect waves-light blue lighten-1 material-icons modal-trigger"
-                            id="addCategoriesBtn">add</button>
+                        <a data-target="Dialog" class="btn-floating waves-effect waves-light blue lighten-1"
+                            id="addCategoriesBtn"><i class='material-icons'>add</i></a>
                     </div>
                 </div>
                 <table class="striped" id="locationTable">
@@ -48,15 +60,14 @@
                 <br>
             </div>
             <div class="modal-footer">
-                <button class="modal-close waves-effect waves-green btn green" id="saveBtn">OK</button>
-                <button class="modal-close waves-effect waves-red btn red" id="closeBtn">Cancel</button>
+                <a class="modal-close waves-effect waves-green btn green" id="saveBtn">OK</a>
+                <a class="modal-close waves-effect waves-red btn red" id="closeBtn"></a>
             </div>
         </div>
 
         <div class="fixed-action-btn">
-            <button data-target="Dialog"
-                class="btn-floating btn-large modal-trigger waves-effect waves-circle waves-light red" id="popbtn"><i
-                    class="material-icons">add</i></button>
+            <a data-target="Dialog" class="modal-trigger btn-floating btn-large waves-effect waves-circle waves-light red"
+                id="popbtn"><i class="material-icons">add</i></a>
         </div>
     </div>
 </body>

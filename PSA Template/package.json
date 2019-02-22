@@ -1,0 +1,8 @@
+{
+	"dependencies": {
+		"jquery": "3.3.1",
+		"material-icons": "0.3.0",
+		"materialize-css": "1.0.0",
+		"mustache": "3.0.1"
+	}
+}

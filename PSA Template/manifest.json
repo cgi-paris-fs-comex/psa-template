@@ -31,8 +31,8 @@
       ],
       "all_frames": true,
       "js": [
+        "node_modules/jquery/dist/jquery.min.js",
         "js/data.js",
-        "js/jquery.js",
         "js/page.js"
       ]
     }

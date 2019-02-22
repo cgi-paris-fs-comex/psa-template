@@ -16,9 +16,17 @@ $(document).ready(function () {
                     getTimeByDay(time, options);
                     getLocations(locationTab_morn, locationTab_after, options);
                 }
-                disp.innerHTML += "<button class='btn-flat waves-effect waves-red' id='" + options.id
+                /*disp.innerHTML += "<button class='btn-flat waves-effect waves-red' id='" + options.id
                     + "' title='" + timeName + time + "| " + locationMornName + locationTab_morn + "|" + locationAfterName + locationTab_after
-                    + "|"+ activitiesName + cat + "'>" + options.templateName + "</button>";
+                    + "|"+ activitiesName + cat + "'>" + options.templateName + "</button>";*/
+
+                var data = {
+                    id: options.id,
+                    name: options.templateName
+                }
+                var template = $('#mustache-template').html();
+                var html = Mustache.to_html(template, data);
+                disp.innerHTML += html;
             }
         }
     };
@@ -54,7 +62,7 @@ $(document).ready(function () {
     };
     displayBtn();
     /* Send the templates informations to page.js */
-    $('button').click(function (event) {
+    $('a').click(function (event) {
         chrome.tabs.query({
             currentWindow: true,
             active: true

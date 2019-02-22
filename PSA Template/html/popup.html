@@ -6,20 +6,45 @@
     <meta charset="utf-8">
 
     <link rel="stylesheet" href="../node_modules/materialize-css/dist/css/materialize.min.css">
+    <link rel="stylesheet" href="../node_modules/material-icons/iconfont/material-icons.css">
 </head>
 
-<body>
+<body style="width:400px">
 
-<div class="col s12" id="savedBtn">
+<div class="navbar-fixed">
+    <nav>
+        <div class="nav-wrapper red">
+            <div class="brand-logo">PSA Template</div>
+        </div>
+    </nav>
 </div>
+
+<div class="row" id="savedBtn">
+</div>
+
+</body>
+
+<!-- mustache -->
+
+<script id="mustache-template" type="text/template">
+    <div class="col s12">
+        <div class="card blue-grey darken-1">
+            <div class="card-content white-text">
+                <span class="card-title">{{ name }}</span>
+                <a id="{{ id }}" class="waves-effect waves-light btn red"><i class="material-icons right">send</i> Appliquer</a>
+            </div>
+        </div>
+    </div>
+</script>
+
+<!-- scripts -->
 
 <script src="../node_modules/jquery/dist/jquery.min.js"></script>
 <script src="../node_modules/materialize-css/dist/js/materialize.min.js"></script>
+<script src="../node_modules/mustache/mustache.min.js"></script>
 
 <script src="../js/materialize.init.js"></script>
 <script src="../js/data.js"></script>
 <script src="../js/popup.js"></script>
-
-</body>
 
 </html>

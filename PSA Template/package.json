@@ -1,8 +1,26 @@
 {
+	"name": "psa-template",
+	"version": "1.2.0",
 	"dependencies": {
 		"jquery": "3.3.1",
 		"material-icons": "0.3.0",
 		"materialize-css": "1.0.0",
 		"mustache": "3.0.1"
+	},
+	"bundledDependencies": [
+		"jquery", "material-icons", "materialize-css", "mustache"
+	],
+	"files": [
+		"**/*.min.js",
+		"js/**/*.js",
+		"html/**/*.html",
+		"img/**/*.png",
+		"node_modules/mustache/*.js"
+	],
+	"scripts": {
+		"pack": "npm-pack-zip"
+	},
+	"devDependencies": {
+		"npm-pack-zip": "1.2.7"
 	}
 }

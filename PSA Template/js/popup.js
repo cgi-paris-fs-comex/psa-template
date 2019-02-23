@@ -1,14 +1,14 @@
 $(document).ready(function () {
 
 	/* Display all templates */
-	var container = $('#container');
+	var container = $('#templates-container');
 
 	// TODO : Change access to a list of pdaTemplates
 	for (var key in localStorage) {
 		if (Number.isInteger(parseInt(key))) {
 			if (localStorage.getItem(key) != null) {
 
-				var psaTemplate = Tools.getPsaTemplate(key);
+				var psaTemplate = Utils.getPsaTemplate(key);
 
 				// TODO : To remove
 				var data = {
@@ -16,7 +16,7 @@ $(document).ready(function () {
 					name: psaTemplate.templateName
 				};
 
-				var html = Tools.toHtml('container-content', data);
+				var html = Utils.toHtml('template-element', data);
 
 				container.append(html);
 			}
@@ -24,8 +24,8 @@ $(document).ready(function () {
 	}
 
 	$('a').click(function (event) {
-		var psaTemplate = Tools.getPsaTemplate(event.target.id);
-		Tools.sendMessageToActiveTab(psaTemplate);
+		var psaTemplate = Utils.getPsaTemplate(event.target.id);
+		Utils.sendMessageToActiveTab(psaTemplate);
 	});
 
 });

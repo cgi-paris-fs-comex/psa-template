@@ -14,10 +14,7 @@
 			"19": "img/logo/icon-19px.png",
 			"38": "img/logo/icon-38px.png"
 		},
-		"default_popup": "html/popup.html",
-		"matches": [
-			"https://psa-fs.ent.cgi.com/*"
-		]
+		"default_popup": "html/popup.html"
 	},
 	"background": {
 		"scripts": [

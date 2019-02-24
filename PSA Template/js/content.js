@@ -1,6 +1,7 @@
 class Content {
 
 	constructor() {
+		chrome.runtime.sendMessage({ "message": "activate_icon" })
 		Utils.onTemplateReceived((template) => this.applyTemplate(template))
 	}
 
@@ -102,5 +103,3 @@ class Content {
 }
 
 let content = new Content()
-
-chrome.runtime.sendMessage({ "message": "activate_icon" });

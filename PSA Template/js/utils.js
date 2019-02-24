@@ -1,16 +1,6 @@
 
 class Utils {
 
-	static currentId = 0;
-
-	static resetId() {
-		Utils.currentId = 0;
-	}
-
-	static nextId() {
-		return Utils.currentId++;
-	}
-
 	static toElement(templateId, data) {
 		return $(Utils.toHtml(templateId, data))
 	}

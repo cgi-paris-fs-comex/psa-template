@@ -9,6 +9,8 @@ class Options {
 	}
 
 	initialize() {
+		M.AutoInit();
+
 		$('#addProjectBtn').click(() => this.newProject());
 		$('#addCategoriesBtn').click(() => this.newCategory());
 		$('#addTemplateBtn').click(() => this.emptyTemplateEdit());

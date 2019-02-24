@@ -1,0 +1,32 @@
+{
+	"morning": {
+		"message": "Matin"
+	},
+	"afternoon": {
+		"message": "Après-midi"
+	},
+	"name": {
+		"message": "Nom"
+	},
+	"sun": {
+		"message": "Dimanche"
+	},
+	"mon": {
+		"message": "Lundi"
+	},
+	"tue": {
+		"message": "Mardi"
+	},
+	"wed": {
+		"message": "Mercredi"
+	},
+	"thu": {
+		"message": "Jeudi"
+	},
+	"fri": {
+		"message": "Vendredi"
+	},
+	"sat": {
+		"message": "Samedi"
+	}
+}

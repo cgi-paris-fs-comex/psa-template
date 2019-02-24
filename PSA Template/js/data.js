@@ -273,3 +273,12 @@ var Morning = lang.Morning;
 var Afternoon = lang.Afternoon;
 var locationTitle = lang.locationTitle;
 
+var days_new = [
+	{ num: 0, label: "sun" },
+	{ num: 1, label: "mon" },
+	{ num: 2, label: "tue" },
+	{ num: 3, label: "wed" },
+	{ num: 4, label: "thu" },
+	{ num: 5, label: "fri" },
+	{ num: 6, label: "sat" }
+]

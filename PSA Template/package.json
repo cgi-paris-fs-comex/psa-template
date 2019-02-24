@@ -3,12 +3,16 @@
 	"version": "1.2.0",
 	"dependencies": {
 		"jquery": "3.3.1",
+		"jquery-form-serializer": "^1.2.0",
 		"material-icons": "0.3.0",
 		"materialize-css": "1.0.0",
 		"mustache": "3.0.1"
 	},
 	"bundledDependencies": [
-		"jquery", "material-icons", "materialize-css", "mustache"
+		"jquery",
+		"material-icons",
+		"materialize-css",
+		"mustache"
 	],
 	"files": [
 		"**/*.min.js",

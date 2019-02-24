@@ -5,95 +5,90 @@ class Content {
 	}
 
 	applyTemplate(template) {
-		console.log('apply')
-		console.log(template)
+		if (this.isTimeTable()) {
+			this.applyProjects(template.projects)
+			this.applyCategories(template.categories)
+		}
+		if (this.isRestTable()) {
+			this.applyLocations(template.locations)
+		}
 	}
 
-}
-
-let content = new Content()
-
-chrome.runtime.sendMessage({ "message": "activate_icon" });
-
-/*
-
-var caTime;
-var projectTime;
-var locations_morn;
-var locations_after;
-var category;
-chrome.runtime.onMessage.addListener(startContentScript);
-
-function startContentScript(message) {
-	catTime = message.time[0].value;
-	locations_morn = message.location_morn;
-	locations_after = message.location_after;
-	category = message.time[1].value;
-	projectTime = message.projTime;
-
-
-	var documents = [document];
-	var iframes = document.getElementsByTagName('iframe');
-	for (var iframeIndex = 0; iframeIndex < iframes.length; iframeIndex++) {
-		documents.push(iframes[iframeIndex].contentDocument);
+	isTimeTable() {
+		return $('#l0EX_TIME_DTL\\$0').length > 0
 	}
 
-	var timeTable = $('#l0EX_TIME_DTL\\$0');
+	applyProjects(projects) {
+		if (projects) {
+			projects.forEach((project, projectIndex) => this.applyProject(project, projectIndex))
+		}
+	}
 
-	var updateTime = function () {
-		console.log('onUpdateTime');
-		updateTimeOnLine();
-	};
-	var updateTimeOnLine = function () {
-		console.log('onUpdateTimeOnLine');
-		for (var i = 0; i < projectTime.length; i++) {
-			for (var j = 1; j <= days.length; j++) {
-				setValue('TIME', j, i, projectTime[i][j - 1]);
+	applyProject(project, projectIndex) {
+		project.days.forEach((day, dayIndex) => this.applyValue('TIME', dayIndex, projectIndex, day))
+	}
+
+	applyCategories(categories) {
+		if (categories) {
+			categories.forEach((category) => this.applyCategory(category))
+		}
+	}
+
+	applyCategory(category) {
+		let categoryElement = $('span:contains("' + category.name + '")')
+		if (categoryElement.length > 0) {
+			let categoryId = categoryElement[0].id
+			let categoryIndex = categoryId.split('$')[1];
+			category.days.forEach((day, dayIndex) => this.applyValue('POL_TIME', dayIndex, categoryIndex, day))
+		}
+	}
+
+	isRestTable() {
+		return $('#UC_EX_TDLY_FR\\$scroll\\$0').length > 0
+	}
+
+	applyLocations(locations) {
+		if (locations) {
+			for (let dayIndex = 0; dayIndex < 7; dayIndex++) {
+				let morning = this.findDay(locations.morning, dayIndex)
+				let afternoon = this.findDay(locations.afternoon, dayIndex)
+				let dayoff = morning == 'NA' && afternoon == 'NA'
+
+				this.applyLocation(dayIndex, morning, afternoon)
+				this.applyRest(dayIndex, dayoff ? 'NA' : 'Y');
+				this.applyLunch(dayIndex, dayoff ? 0 : 1);
 			}
 		}
-		for (var i = 0; i < category.length; i++) {
-			for (var j = 1; j <= days.length; j++) {
-				var catStr = ($('span:contains("' + category[i] + '")')[0].id).toString();
-				var col = catStr.split('$')[1];
-				setValue('POL_TIME', j, col, catTime[i][j - 1]);
-			}
+	}
+
+	applyLocation = function (dayIndex, morning, afternoon) {
+		this.applyValue('UC_LOCATION_A', dayIndex, 0, morning);
+		this.applyValue('UC_LOCATION_A', dayIndex, 1, afternoon);
+	}
+
+	applyLunch = function (dayIndex, value) {
+		this.applyValue('UC_TIME_LIN_WRK_UC_DAILYREST1', dayIndex, 0, value);
+	}
+
+	applyRest = function (dayIndex, value) {
+		this.applyValue('UC_DAILYREST', dayIndex, 0, value);
+		this.applyValue('UC_DAILYREST', dayIndex, 1, value);
+		this.applyValue('UC_DAILYREST', dayIndex, 2, value);
+	}
+
+	findDay(days, dayIndex) {
+		return days ? days[dayIndex] : null
+	}
+
+	applyLocation(location, locationIndex) {
+		if (location) {
+			location.forEach((day, dayIndex) => this.applyValue('UC_LOCATION_A', dayIndex, locationIndex, day))
 		}
-	};
-	var restTable = $('#UC_EX_TDLY_FR\\$scroll\\$0');
+	}
 
-	var updateRestLunchLocation = function () {  //methode pour changer la location (cgi, site client...etc)
-		for (var column = 1; column <= 7; column++) {
-			var location_morn = locations_morn[column - 1];
-			var location_after = locations_after[column - 1];
-			updateRestOnColumn(column, (location_morn == 'NA' && location_after == 'NA') ? 'NA' : 'Y');
-			updateLunchOnColumn(column, (location_morn == 'NA' && location_after == 'NA') ? 0 : 1);
-			updateLocationOnColumn(column, location_morn, location_after);
-		}
+	applyValue(name, column, line, value) {
+		column++
 
-		/* Overtime requested by manager
-		$('#UC_EX_TIME_FR_H_UC_OT_RQST_MNGR\\$0').value = 0;
-		/* including Sunday hours
-		$('#UC_EX_TIME_FR_H_UC_OT_RM_SUNDAY\\$0').value = 0;
-		/* including public holidays but Sunday
-		$('#UC_EX_TIME_FR_H_UC_OT_RM_PUBLIC_HO\\$0').value = 0;
-	};
-
-	var updateLunchOnColumn = function (column, value) {
-		setValue('UC_TIME_LIN_WRK_UC_DAILYREST1', column, 0, value);
-	};
-
-	var updateRestOnColumn = function (column, value) {
-		for (var line = 0; line < 3; line++) {
-			setValue('UC_DAILYREST', column, line, value);
-		}
-	};
-
-	var updateLocationOnColumn = function (column, value_morn, value_after) {
-		setValue('UC_LOCATION_A', column, 0, value_morn);
-		setValue('UC_LOCATION_A', column, 1, value_after);
-	};
-
-	var setValue = function (name, column, line, value) {
 		var id = '#' + name + column + '\\$' + line;
 		var elem = $(id);
 		elem.val(value);
@@ -102,13 +97,10 @@ function startContentScript(message) {
 		if ((elem)[0]) {
 			$(elem)[0].dispatchEvent(changeEvent);
 		}
-	};
+	}
 
-	if (timeTable.length != 0 && restTable.length != 1) {
-		updateTime();
-	}
-	if (restTable.length != 0) {
-		updateRestLunchLocation();
-	}
 }
- */
+
+let content = new Content()
+
+chrome.runtime.sendMessage({ "message": "activate_icon" });

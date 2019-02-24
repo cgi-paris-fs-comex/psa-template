@@ -10,11 +10,26 @@ class Utils {
 		return html;
 	}
 
-	static sendMessageToActiveTab(data) {
+	static sendTemplate(template) {
+		Utils.sendMessageToActiveTab('template', template)
+	}
+
+	static onTemplateReceived(callback) {
+		chrome.runtime.onMessage.addListener((message) => {
+			if (message.id == 'template') {
+				callback(message.value)
+			}
+		})
+	}
+
+	static sendMessageToActiveTab(id, value) {
 		chrome.tabs.query({
 			currentWindow: true,
 			active: true
-		}, (tabs) => tabs.forEach((tab) => chrome.tabs.sendMessage(tab.id, data)))
+		}, (tabs) => tabs.forEach((tab) => chrome.tabs.sendMessage(tab.id, {
+			id: id,
+			value: value
+		})))
 	}
 
 	static translate(parent) {

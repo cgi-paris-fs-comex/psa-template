@@ -1,6 +1,22 @@
+class Content {
+
+	constructor() {
+		Utils.onTemplateReceived((template) => this.applyTemplate(template))
+	}
+
+	applyTemplate(template) {
+		console.log('apply')
+		console.log(template)
+	}
+
+}
+
+let content = new Content()
+
 chrome.runtime.sendMessage({ "message": "activate_icon" });
 
-/* Configuration */
+/*
+
 var caTime;
 var projectTime;
 var locations_morn;
@@ -15,7 +31,6 @@ function startContentScript(message) {
 	category = message.time[1].value;
 	projectTime = message.projTime;
 
-	/* Code */
 
 	var documents = [document];
 	var iframes = document.getElementsByTagName('iframe');
@@ -23,7 +38,6 @@ function startContentScript(message) {
 		documents.push(iframes[iframeIndex].contentDocument);
 	}
 
-	/* TIMETABLE */
 	var timeTable = $('#l0EX_TIME_DTL\\$0');
 
 	var updateTime = function () {
@@ -39,9 +53,9 @@ function startContentScript(message) {
 		}
 		for (var i = 0; i < category.length; i++) {
 			for (var j = 1; j <= days.length; j++) {
-				var catStr = ($('span:contains("' + category[i] + '")')[0].id).toString();	
+				var catStr = ($('span:contains("' + category[i] + '")')[0].id).toString();
 				var col = catStr.split('$')[1];
-				setValue('POL_TIME', j, col, catTime[i][j-1]);
+				setValue('POL_TIME', j, col, catTime[i][j - 1]);
 			}
 		}
 	};
@@ -56,11 +70,11 @@ function startContentScript(message) {
 			updateLocationOnColumn(column, location_morn, location_after);
 		}
 
-		/* Overtime requested by manager */
+		/* Overtime requested by manager
 		$('#UC_EX_TIME_FR_H_UC_OT_RQST_MNGR\\$0').value = 0;
-		/* including Sunday hours */
+		/* including Sunday hours
 		$('#UC_EX_TIME_FR_H_UC_OT_RM_SUNDAY\\$0').value = 0;
-		/* including public holidays but Sunday */
+		/* including public holidays but Sunday
 		$('#UC_EX_TIME_FR_H_UC_OT_RM_PUBLIC_HO\\$0').value = 0;
 	};
 
@@ -97,4 +111,4 @@ function startContentScript(message) {
 		updateRestLunchLocation();
 	}
 }
-
+ */

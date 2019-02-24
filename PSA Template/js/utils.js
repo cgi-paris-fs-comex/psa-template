@@ -28,51 +28,6 @@ class Utils {
 		}, (tabs) => tabs.forEach((tab) => chrome.tabs.sendMessage(tab.id, data)))
 	}
 
-	static getPsaTemplate(psaTemplateId) {
-		return JSON.parse(localStorage.getItem(psaTemplateId));
-	}
-
-	static getPsaTemplates() {
-		let psaTemplates = [];
-
-		for (var key in localStorage) {
-			if ((localStorage.getItem(key) != null) && (key != 'lang')) {
-				psaTemplates.push(Utils.getPsaTemplate(key));
-			}
-		}
-
-		return psaTemplates;
-	}
-
-	static saveTemplate(template, templateIndex) {
-		let templates = Utils.readTemplates();
-		if (templateIndex == null) {
-			templates.push(template);
-		} else {
-			templates[templateIndex] = template;
-		}
-		Utils.saveTemplates(templates);
-	}
-
-	static saveTemplates(templates) {
-		localStorage.setItem("templates", JSON.stringify(templates));
-	}
-
-	static readTemplate(templateIndex) {
-		return Utils.readTemplates()[templateIndex]
-	}
-
-	static readTemplates() {
-		let templates = JSON.parse(localStorage.getItem("templates"))
-		return templates == null ? [] : templates
-	}
-
-	static deleteTemplate(templateIndex) {
-		let templates = Utils.readTemplates()
-		templates.splice(templateIndex, 1)
-		Utils.saveTemplates(templates);
-	}
-
 	static translate(parent) {
 		$('[translate]', parent).each((index, dom) => {
 			let element = $(dom)

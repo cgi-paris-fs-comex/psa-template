@@ -1,11 +1,19 @@
-$(document).ready(function () {
+class Popup {
 
-	var container = $('#templates-container');
+	templateService = new TemplateService()
 
-	for (let template of Utils.readTemplates()) {
-		let element = Utils.toElement('template-element', template)
-		$('.apply', element).click(() => Utils.sendMessageToActiveTab(template))
-		element.appendTo(container)
+	constructor() {
+		$(document).ready(() => this.displayTemplates());
 	}
 
-});
+	displayTemplates() {
+		var container = $('#templates-container');
+		for (let template of this.templateService.readAll()) {
+			let element = Utils.toElement('template-element', template)
+			$('.apply', element).click(() => Utils.sendMessageToActiveTab(template))
+			element.appendTo(container)
+		}
+	}
+}
+
+let popup = new Popup()

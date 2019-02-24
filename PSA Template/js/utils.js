@@ -1,4 +1,3 @@
-
 class Utils {
 
 	static toElement(templateId, data) {
@@ -24,7 +23,9 @@ class Utils {
 			if (element.data('translate') == null) {
 				element.data('translate', element.text())
 			}
-			element.text(Utils.getMessage(element.data('translate')))
+			let translationKey = element.data('translate')
+			let translation = Utils.getMessage(translationKey)
+			element.text(translation == null ? translationKey + ' (translation not found)' : translation)
 		})
 	}
 

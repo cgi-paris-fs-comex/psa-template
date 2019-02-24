@@ -1,4 +1,8 @@
+let KEY_TEMPLATES = 'templates'
+
 class TemplateService {
+
+	storageService = new StorageService()
 
 	insert(template) {
 		this.insertOrUpdate(null, template)
@@ -15,7 +19,7 @@ class TemplateService {
 	}
 
 	saveAll(templates) {
-		localStorage.setItem("templates", JSON.stringify(templates));
+		this.storageService.write(KEY_TEMPLATES, templates);
 	}
 
 	read(templateIndex) {
@@ -23,7 +27,7 @@ class TemplateService {
 	}
 
 	readAll() {
-		let templates = JSON.parse(localStorage.getItem("templates"))
+		let templates = this.storageService.read(KEY_TEMPLATES)
 		return templates == null ? [] : templates
 	}
 
@@ -34,5 +38,3 @@ class TemplateService {
 	}
 
 }
-
-let templateService = new TemplateService()

@@ -5,23 +5,23 @@ class Options {
 	currentId = 0
 
 	constructor() {
-		$(document).ready(() => {
+		$(document).ready(() => this.initialize());
+	}
 
-			$('#addProjectBtn').click(() => this.newProject());
-			$('#addCategoriesBtn').click(() => this.newCategory());
-			$('#addTemplateBtn').click(() => this.emptyTemplateEdit());
-			$('#saveTemplateBtn').click(() => this.saveTemplate())
+	initialize() {
+		$('#addProjectBtn').click(() => this.newProject());
+		$('#addCategoriesBtn').click(() => this.newCategory());
+		$('#addTemplateBtn').click(() => this.emptyTemplateEdit());
+		$('#saveTemplateBtn').click(() => this.saveTemplate())
 
-			this.createLocations();
-			this.displayTemplates();
-			Utils.translate();
-
-		});
+		this.createLocations();
+		this.displayTemplates();
+		Utils.translate();
 	}
 
 	createLocations() {
 		let data = {
-			days: days_new,
+			days: days,
 			locations: locations
 		}
 		let element = Utils.toElement('locations-element', data);
@@ -48,7 +48,7 @@ class Options {
 	newProject() {
 		var data = {
 			id: this.currentId++,
-			days: days_new
+			days: days
 		}
 		var element = Utils.toElement('project-element', data);
 
@@ -66,8 +66,8 @@ class Options {
 	newCategory() {
 		var data = {
 			id: this.currentId++,
-			categories: categories,
-			days: days_new
+			categories: categories.fr,
+			days: days
 		}
 
 		var element = Utils.toElement('category-element', data);

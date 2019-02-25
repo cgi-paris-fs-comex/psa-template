@@ -1,0 +1,8 @@
+
+.modal {
+	height: initial;
+	max-height: 90% !important;
+}
+.modal-content {
+	position: static !important;
+}

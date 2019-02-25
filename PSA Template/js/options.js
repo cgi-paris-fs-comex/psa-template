@@ -10,6 +10,10 @@ class Options {
 
 	initialize() {
 		M.AutoInit();
+		$('.modal').modal({
+
+		})
+
 
 		$('#addProjectBtn').click(() => this.newProject());
 		$('#addCategoriesBtn').click(() => this.newCategory());

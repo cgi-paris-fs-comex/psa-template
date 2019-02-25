@@ -55,14 +55,19 @@ class Options {
 		var element = Utils.toElement('project-element', data);
 
 		$('.delete', element).click(() => element.remove());
-		$('.duplicate', element).click(() => {
-			console.log('copying');
-		});
+		$('.duplicate', element).click(() => this.duplicateProject(element));
 
 		element.appendTo('#projectForm');
 		Utils.translate(element);
 		M.updateTextFields();
 		return element;
+	}
+
+	duplicateProject(element) {
+		let template = this.buildTemplate()
+		let index = element.index()
+		template.projects.splice(index + 1, 0, template.projects[index])
+		this.fillTemplateEdit(template, this.templateIndex)
 	}
 
 	newCategory() {
@@ -74,14 +79,19 @@ class Options {
 
 		var element = Utils.toElement('category-element', data);
 		$('.delete', element).click(() => element.remove());
-		$('.duplicate', element).click(() => {
-			console.log('copying');
-		});
+		$('.duplicate', element).click(() => this.duplicateCategory(element));
 		element.appendTo('#categoriesForm');
 		element.find('select').formSelect();
 		Utils.translate(element);
 		M.updateTextFields();
 		return element
+	}
+
+	duplicateCategory(element) {
+		let template = this.buildTemplate()
+		let index = element.index()
+		template.categories.splice(index + 1, 0, template.categories[index])
+		this.fillTemplateEdit(template, this.templateIndex)
 	}
 
 	emptyTemplateEdit() {
@@ -95,6 +105,12 @@ class Options {
 	}
 
 	saveTemplate() {
+		let template = this.buildTemplate()
+		this.templateService.insertOrUpdate(this.templateIndex, template)
+		this.displayTemplates()
+	}
+
+	buildTemplate() {
 		let template = $('#template-form').serializeObject()
 		if (template.projects) {
 			template.projects = Object.values(template.projects)
@@ -102,15 +118,17 @@ class Options {
 		if (template.categories) {
 			template.categories = Object.values(template.categories)
 		}
-
-		this.templateService.insertOrUpdate(this.templateIndex, template)
-		this.displayTemplates()
+		return template
 	}
 
 	editTemplate(templateIndex) {
+		let template = this.templateService.read(templateIndex)
+		this.fillTemplateEdit(template, templateIndex)
+	}
+
+	fillTemplateEdit(template, templateIndex) {
 		this.emptyTemplateEdit();
 		this.templateIndex = templateIndex;
-		let template = this.templateService.read(templateIndex)
 
 		let form = $('#template-form');
 

@@ -92,40 +92,44 @@
 </script>
 
 <script id="project-element" type="text/template">
-	<div class="col s3 input-field">
-		<input type="text" class="validate name" id="projects._{{id}}.name" name="projects._{{id}}.name">
-		<label class="active" for="projects._{{id}}.name" translate>name</label>
-	</div>
-	{{#days}}
-	<div class="col s1 input-field">
-		<input type="text" class="day" id="projects._{{id}}.days.{{num}}" name="projects._{{id}}.days.{{num}}">
-		<label class="active" for="projects._{{id}}.days.{{num}}" translate>{{label}}</label>
-	</div>
-	{{/days}}
-	<div class="col s2 input-field">
-		<a class="waves-effect waves-light white-text red lighten-1 btn delete"><i class="material-icons">delete</i></a>
-		<a class="waves-effect waves-light white-text lighten-1 btn duplicate"><i class="material-icons">filter_none</i></a>
+	<div>
+		<div class="col s3 input-field">
+			<input type="text" class="validate name" id="projects._{{id}}.name" name="projects._{{id}}.name">
+			<label class="active" for="projects._{{id}}.name" translate>name</label>
+		</div>
+		{{#days}}
+		<div class="col s1 input-field">
+			<input type="text" class="day" id="projects._{{id}}.days.{{num}}" name="projects._{{id}}.days.{{num}}">
+			<label class="active" for="projects._{{id}}.days.{{num}}" translate>{{label}}</label>
+		</div>
+		{{/days}}
+		<div class="col s2 input-field">
+			<a class="waves-effect waves-light white-text red lighten-1 btn delete"><i class="material-icons">delete</i></a>
+			<a class="waves-effect waves-light white-text lighten-1 btn duplicate"><i class="material-icons">filter_none</i></a>
+		</div>
 	</div>
 </script>
 
 <script id="category-element" type="text/template">
-	<div class="col s3 input-field">
-		<select name="categories._{{id}}.name" class="name">
-			<option id="choice" value="" disabled selected>Selectionner un activité</option>
-			{{#categories}}
-			<option value="{{.}}">{{.}}</option>
-			{{/categories}}
-		</select>
-	</div>
-	{{#days}}
-	<div class="col s1 input-field">
-		<input type="text" class="day" id="categories._{{id}}.days.{{num}}" name="categories._{{id}}.days.{{num}}">
-		<label class="active" for="categories._{{id}}.days.{{num}}" translate>{{label}}</label>
-	</div>
-	{{/days}}
-	<div  class="col s2 input-field">
-		<a class="waves-effect waves-light white-text red lighten-1 btn delete"><i class="material-icons">delete</i></a>
-		<a class="waves-effect waves-light white-text lighten-1 btn duplicate"><i class="material-icons">filter_none</i></a>
+	<div>
+		<div class="col s3 input-field">
+			<select name="categories._{{id}}.name" class="name">
+				<option id="choice" value="" disabled selected>Selectionner un activité</option>
+				{{#categories}}
+				<option value="{{.}}">{{.}}</option>
+				{{/categories}}
+			</select>
+		</div>
+		{{#days}}
+		<div class="col s1 input-field">
+			<input type="text" class="day" id="categories._{{id}}.days.{{num}}" name="categories._{{id}}.days.{{num}}">
+			<label class="active" for="categories._{{id}}.days.{{num}}" translate>{{label}}</label>
+		</div>
+		{{/days}}
+		<div  class="col s2 input-field">
+			<a class="waves-effect waves-light white-text red lighten-1 btn delete"><i class="material-icons">delete</i></a>
+			<a class="waves-effect waves-light white-text lighten-1 btn duplicate"><i class="material-icons">filter_none</i></a>
+		</div>
 	</div>
 </script>
 

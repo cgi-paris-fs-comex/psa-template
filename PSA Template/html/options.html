@@ -2,7 +2,7 @@
 
 <head>
 	<meta charset="utf-8">
-	<title>PSA Template - Options</title>
+	<title translate>options.title</title>
 
 	<link rel="stylesheet" href="../node_modules/materialize-css/dist/css/materialize.css">
 	<link rel="stylesheet" href="../node_modules/material-icons/iconfont/material-icons.css">
@@ -17,7 +17,11 @@
 		<nav>
 			<div class="nav-wrapper red">
 				<div class="container">
-					<div class="brand-logo">Options</div>
+					<div class="row">
+						<div class="col">
+							<div class="brand-logo">Options</div>
+						</div>
+					</div>
 				</div>
 			</div>
 		</nav>
@@ -114,12 +118,8 @@
 <script id="category-element" type="text/template">
 	<div>
 		<div class="col s3 input-field">
-			<select name="categories._{{id}}.name" class="name">
-				<option id="choice" value="" disabled selected>Selectionner un activité</option>
-				{{#categories}}
-				<option value="{{.}}">{{.}}</option>
-				{{/categories}}
-			</select>
+			<input type="text" id="categories._{{id}}.name" name="categories._{{id}}.name" class="name autocomplete">
+			<label for="categories._{{id}}.name">Catégorie</label>
 		</div>
 		{{#days}}
 		<div class="col s1 input-field">

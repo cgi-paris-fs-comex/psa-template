@@ -10,10 +10,7 @@ class Options {
 
 	initialize() {
 		M.AutoInit();
-		$('.modal').modal({
-
-		})
-
+		$('.modal').modal()
 
 		$('#addProjectBtn').click(() => this.newProject());
 		$('#addCategoriesBtn').click(() => this.newCategory());
@@ -77,15 +74,22 @@ class Options {
 	newCategory() {
 		var data = {
 			id: this.currentId++,
-			categories: categories.fr,
 			days: days
 		}
 
 		var element = Utils.toElement('category-element', data);
 		$('.delete', element).click(() => element.remove());
-		$('.duplicate', element).click(() => this.duplicateCategory(element));
-		element.appendTo('#categoriesForm');
-		element.find('select').formSelect();
+		$('.duplicate', element).click(() => this.duplicateCategory(element))
+		element.appendTo('#categoriesForm')
+		$('.autocomplete', element).autocomplete({
+			data: categories.fr.reduce((result, current) => {
+				result[current] = null
+				return result
+			}, {}),
+			minLength: 0,
+			dropdownOptions: { container: document.body, constrainWidth: false }
+		})
+
 		Utils.translate(element);
 		M.updateTextFields();
 		return element

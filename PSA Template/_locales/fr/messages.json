@@ -1,4 +1,7 @@
 {
+	"options.title": {
+		"message": "PSA Template - Options"
+	},
 	"morning": {
 		"message": "Matin"
 	},

@@ -1,484 +1,220 @@
-console.log("on options");
-$(document).ready(function () {
-    saveLang();
-    if (localStorage.length != 0) {
-        $('select').formSelect();
-        $('.dropdown-trigger')[0].style = "color: white;";
-        displayTemplate();
-    }
-    var catl = 0;
-    var projl = 0;
-    function addProject(line) {
-        var proj = "<div id='proj" + line + "' class='row'><div  class='col s2 input-field'><input type='text' class='validate' disabled value='"+ projectTtitle.split('s')[0]+" "+ line + "'></div>";
-        for (var i = 1; i < days.length + 1; i++) {
-            proj += "<div class='col s1 input-field'><input type='text' id='P" + line + "D" + i + "'><label class='active' for='P" + line + "D" + i + "'>" + days[i - 1] + "</label></div>";
-        }
-        proj += "<div class='col input-field'><a class='waves-effect waves-light white-text red lighten-1 btn' id='delete_" + line + "'><i id='delete_" + line + "' class='material-icons'>delete</i></a>"
-            + " <a class='waves-effect waves-light white-text lighten-1 btn' id='duplicate_" + line + "'><i id='duplicate_" + line + "' class='material-icons'>filter_none</i></a></div></div>";
-        $('#projectForm')[0].innerHTML += proj;
-        projl++;
-    };
+class Options {
 
-    function addProjectToOthers() {
-        temp = [];
-        for (var i = 0; i < projl; i++) {
-            temp.push([]);
-            for (var j = 0; j < 7; j++) {
-                temp[i].push($("#P" + i + "D" + (j + 1))[0].value);
-            }
-        }
-        addProject(projl)
-        for (var i = 0; i < projl - 1; i++) {
-            for (var j = 0; j < 7; j++) {
-                $("#P" + i + "D" + (j + 1))[0].value = temp[i][j];
-            }
-        }
-    };
+	templateService = new TemplateService()
+	storageService = new StorageService()
+	templateIndex
+	currentId = 0
 
-    function addCategory(line, activitieChoice) {
-        var cat = "<div id = 'cat" + line + "' class='row'><div class='col s3 input-field'><select id='select" + line + "'><option id='choice' value='' disabled selected>"+activitieChoice+"</option>";
-        for (var i = 0; i < categories.length; i++) {
-            cat += "<option value='" + categories[i] + "'>" + categories[i] + "</option>";
-        }
-        cat += "</select></div>";
-        for (var i = 1; i < days.length + 1; i++) {
-            cat += "<div class='col s1 input-field'><input type='text' id='C" + line + "D" + i + "'><label class='active' for='C" + line + "D" + i + "'>" + days[i - 1] + "</label></div>";
-        }
-        cat += "<div  class='col input-field'><a class='waves-effect waves-light white-text red lighten-1 btn' id='deleteCat" + line + "'><i id='deleteCat" + line + "' class='material-icons'>delete</i></a>"
-            + " <a class='waves-effect waves-light white-text lighten-1 btn' id='duplicateCat" + line + "'><i id='duplicateCat" + line + "' class='material-icons'>filter_none</i></a>";
-        $('#categoriesForm')[0].innerHTML += cat;
-        catl++;
-    };
+	constructor() {
+		$(document).ready(() => this.initialize());
+	}
 
-    function addCategoryToOthers() {
-        temp = [];
-        temp2 = [];
-        for (var i = 0; i < catl; i++) {
-            temp.push([]);
-            for (var j = 0; j < 7; j++) {
-                temp[i].push($("#C" + i + "D" + (j + 1))[0].value);
-            }
-            temp2.push($("#select" + i)[0].value);
-        }
-        addCategory(catl,optionActivite)
-        for (var i = 0; i < catl - 1; i++) {
-            for (var j = 0; j < 7; j++) {
-                $("#C" + i + "D" + (j + 1))[0].value = temp[i][j];
-            }
-            $("#select" + i)[0].value = temp2[i];
-        }
-    };
+	initialize() {
+		this.initializeLanguage()
 
-    $('#popbtn').click(function () {
-        $('.modal').modal({
-            dismissible: false
-        });
-        var project = projectTtitle.toString();
-        var activites = activititesTitle.toString();
-        $('#projectTitle')[0].innerHTML = project;
-        $('#activitesTitle')[0].innerHTML = activites;
-        $('#templateName')[0].placeholder = templatePlaceholder;
-        $('#closeBtn')[0].innerHTML = cancelBtn;
-        $('#addProjectBtn').click(function () {
-            if (projl == 0) {
-                addProject(projl);
-            }
-            else {
-                addProjectToOthers();
-            }
-            $('a[id^="duplicate_"]').click(function (event) {
-                duplicateLine("duplicate_", event);
-            });
-            $('a[id^="delete_"]').click(function (event) {
-                deleteLine("delete_", "proj", event);
-            });
-        });
-        $('#addCategoriesBtn').click(function () {
-            $('select').formSelect('destroy');
-            if (catl == 0) {
-                addCategory(catl,optionActivite);
-            }
-            else {
-                addCategoryToOthers();
-            }
-            $('a[id^=deleteCat]').click(function (event) {
-                deleteLine("deleteCat", "cat", event);
-            });
-            $('a[id^=duplicateCat]').click(function (event) {
-                duplicateLine("duplicateCat", event);
-            });
-            $('select').formSelect();
-        });
-        $('#saveBtn').click(function () {
-            var json = jsonConstructor();
-            storeJson(json);
-            location.reload();
-        });
-        $('#closeBtn').click(function () {
-            location.reload();
-        });
-        $('select').formSelect();
-    });
+		$('#addProjectBtn').click(() => this.newProject())
+		$('#addCategoriesBtn').click(() => this.newCategory())
+		$('#addTemplateBtn').click(() => this.emptyTemplateEdit())
+		$('#saveTemplateBtn').click(() => this.saveTemplate())
+		$('#language').change(() => this.changeLanguage())
 
-    function deleteLine(id, divId, event) {
-        if (id == "delete_") {
-            for (var i = 0; i < projl; i++) {
-                if (event.target.id == id + i) {    
-                    middleDelProj(i, divId);
-                    projl--;
-                }
-            }
-        }
-        if (id == "deleteCat") {
-            for (var i = 0; i < catl; i++) {
-                if (event.target.id == id + i) {
-                    middleDelCat(i, divId);
-                    catl--;
-                }
-            }
-        }
-    };
+		$('.modal').modal()
 
-    function middleDelProj(boucle, div) {
-        if (projl > 1) {
-            if (boucle != (projl - 1)) {
-                for (var l = boucle; l < projl - 1; l++) {
-                    for (var k = 1; k < days.length; k++) {
-                        $("#P" + l + "D" + k)[0].value = $("#P" + (l + 1) + "D" + k)[0].value;
-                    }
-                }
-            }
-            $("#" + (div + (projl - 1)))[0].remove();
-        }
-        else {
+		this.createLocations();
+		this.displayTemplates();
+		Utils.translate();
+		M.AutoInit();
+	}
 
-            $("#" + (div + boucle))[0].remove();
-        }
-    };
+	initializeLanguage() {
+		let language = this.storageService.read('language')
+		if (language == null) {
+			language = chrome.i18n.getUILanguage().split('-')[0]
+			this.storageService.write('language', language)
+		}
+		$('#language').val(language)
+	}
 
-    function middleDelCat(boucle, div) {
-        if (catl > 1) {
-            if (boucle != (catl - 1)) {
-                for (var l = boucle; l < catl - 1; l++) {
-                    for (var k = 1; k < days.length; k++) {
-                        $("#C" + l + "D" + k)[0].value = $("#C" + (l + 1) + "D" + k)[0].value;
-                    }
-                    $('select').formSelect('destroy');
-                    $("#select" + l)[0].value = $("#select" + (l + 1))[0].value;
-                    $('select').formSelect();
-                }
-            }
-            $("#" + (div + (catl - 1)))[0].remove();
-        }
-        else {
-            $("#" + (div + boucle))[0].remove();
-        }
-    };
+	changeLanguage() {
+		this.storageService.write('language', $('#language').val())
+	}
 
-    function duplicateLine(id) {
-        if (id == "duplicate_") {
-            $('#addProjectBtn').trigger('click');
-            for (var i = 0; i < projl - 1; i++) {
-                if (event.target.id == id + i) {
-                    for (var j = 1; j < 8; j++) {
-                        $("#P" + (projl - 1) + "D" + j)[0].value = $("#P" + i + "D" + j)[0].value;
-                    }
-                }
-            }
-        }
-        if (id == "duplicateCat") {
-            $('#addCategoriesBtn').trigger('click');
-            $('select').formSelect('destroy');
-            for (var i = 0; i < catl - 1; i++) {
-                if (event.target.id == id + i) {
-                    for (var j = 1; j < 8; j++) {
-                        $("#C" + (catl - 1) + "D" + j)[0].value = $("#C" + i + "D" + j)[0].value;
-                        $("#select" + (catl - 1))[0].value = $("#select" + i)[0].value;
-                    }
-                }
-            }
-            $('select').formSelect();
-        }
-    };
+	createLocations() {
+		let data = {
+			days: days,
+			locations: locations
+		}
+		let element = Utils.toElement('locations-element', data);
+		element.appendTo('#locationTable')
+		element.find('select').formSelect();
+	}
 
-    function intitLocation() {
-        var table = "<tr><th>"+locationTitle+"</th>";
-        for (var i = 0; i < days.length; i++) {
-            table += "<th>" + days[i] + "</th>";
-        }
-        table += "</tr><tr><td><div class='input-field col s12'>"+Morning+"</td>";
-        for (var i = 0; i < days.length; i++) {
-            table += "<td> <div class='input-field col s12'> <select id='select-" + days[i] + "-morning'>";
-            for (var j = 0; j < locations.length; j++) {
-                table += "<option value='" + locations[j].value + "'>" + locations[j].label + "</option>";
-            }
-            table += "</select></div></td>";
-        }
-        table += "</tr><tr><td><div class='input-field col s12'>"+Afternoon+"</td>";
-        for (var i = 0; i < days.length; i++) {
-            table += "<td> <div class='input-field col s12'> <select id='select-" + days[i] + "-afternoon'>";
-            for (var j = 0; j < locations.length; j++) {
-                table += "<option value='" + locations[j].value + "'>" + locations[j].label + "</option>";
-            }
-            table += "</select></div></td>";
-        }
-        table += "</tr>";
-        $('#locationTable')[0].innerHTML = table;
-    };
-    intitLocation();
-    $('.fixed-action-btn').floatingActionButton();
-    function jsonConstructor() {
-        var templateName = $('#templateName')[0].value;
-        var id = 0;
-        while (localStorage.getItem(id) != null) {
-            id++;
-        }
-        var template = {
-            templateName: templateName,
-            time: [
-                { name: 'tabTime', value: [] },
-                { name: 'tabCat', value: [] }
-            ],
-            projTime: [],
-            location_morn: [],
-            location_after: [],
-            id: id,
-        };
-        createProjectTime(template.projTime);
-        createCatTime(template.time[0].value, template.time[1].value);
-        createLocationTime(template.location_morn, template.location_after)
-        return JSON.stringify(template);
-    };
+	displayTemplates() {
+		let container = $('#templatesBody')
+		container.empty()
+		let templates = this.templateService.readAll()
+		for (let templateIndex = 0; templateIndex < templates.length; templateIndex++) {
+			let template = templates[templateIndex]
+			let element = Utils.toElement('template-element', template)
 
-    function createLocationTime(morning, afternoon) {
-        for (var i = 0; i < days.length; i++) {
-            var temp_morn = $('#select-' + days[i] + '-morning')[0];
-            var temp_after = $('#select-' + days[i] + '-afternoon')[0];
-            morning.push(temp_morn.options[temp_morn.selectedIndex].value);
-            afternoon.push(temp_after.options[temp_after.selectedIndex].value);
-        }
-    };
+			$('.edit', element).click(() => this.editTemplate(templateIndex))
+			$('.delete', element).click(() => this.deleteTemplate(templateIndex))
+			$('.duplicate', element).click(() => this.duplicateTemplate(templateIndex))
 
-    function createCatTime(catTime, catName) {
-        if (catl > 0) {
-            for (var j = 0; j < catl; j++) {
-                var CatTab = [];
-                for (var i = 1; i <= days.length; i++) {
-                    CatTab.push($("#C" + j + "D" + i)[0].value);
-                }
-                var temp = $("#select" + j)[0];
-                catName.push(temp.options[temp.selectedIndex].value);
-                catTime.push(CatTab);
-            }
-        }
-    };
+			element.appendTo(container)
+		}
+	}
 
-    function createProjectTime(projectTab) {
-        if (projl > 0) {
-            for (var j = 0; j < projl; j++) {
-                var projLine = [];
-                for (var i = 1; i <= days.length; i++) {
-                    projLine.push($("#P" + j + "D" + i)[0].value);
-                }
-                projectTab.push(projLine);
-            }
-        }
-    };
+	newProject() {
+		var data = {
+			id: this.currentId++,
+			days: days
+		}
+		var element = Utils.toElement('project-element', data);
 
-    function storeJson(parameter) {
-        localStorage.setItem(JSON.parse(parameter).id, parameter);
-    };
+		$('.delete', element).click(() => element.remove());
+		$('.duplicate', element).click(() => this.duplicateProject(element));
 
-    function displayTemplate() {
-        var disp;
-        for (var key in localStorage) {
-            if ((localStorage.getItem(key) != null) && (key != 'lang')) {
-                var getId = JSON.parse(localStorage.getItem(key)).id;
-                disp = "<div class='col s12 m4'><div class='card blue-grey darken-1'><div class='card-content white-text'><span class='card-title'>" + JSON.parse(localStorage.getItem(key)).templateName
-                    + "</span><p>Template for PSA Time</p></div>"
-                    + "<div class='card-action'>"
-                    + "<a data-target='Dialog' class='modal-trigger' id='edit'><i id='edit " + getId + "' class='material-icons'>edit</i></a>"
-                    + "<a  id='delete'><i id='delete " + getId + "' class='material-icons'>delete</i></a>"
-                    + "<a  id='duplicate'><i id='duplicate " + getId + "' class='material-icons'>filter_none</i></a></div></div></div>";
-                $('#templatesBody')[0].innerHTML += disp;
-            }
-        }
-    };
+		element.appendTo('#projectForm');
+		Utils.translate(element);
+		M.updateTextFields();
+		return element;
+	}
 
-    $('a').click(function (event) {
-        var id = event.target.id.split(' ')[0];
-        var value =event.target.id.split(' ')[1];
-        if (id == 'delete') {
-            localStorage.removeItem(value);
-            location.reload();
-        }
-        if (id == 'edit') {
-            $('.modal-footer')[0].innerHTML = "<a class='modal-close waves-effect waves-green btn green' id='saveBtn2'>OK</a>"
-                + " <a class='modal-close waves-effect waves-red btn red' id='closeBtn'>"+cancelBtn+"</a>"
-            editItem(value);
-        }
-        if (id == "duplicate") {
-            duplicateItem(value);
-            location.reload();
-        }
-    });
+	duplicateProject(element) {
+		let template = this.buildTemplate()
+		let index = element.index()
+		template.projects.splice(index + 1, 0, template.projects[index])
+		this.fillTemplateEdit(template, this.templateIndex)
+	}
 
-    function displayCategories(json) {
-        if (json.time[0].value.length > 0) {
-            for (var i = 0; i < json.time[0].value.length; i++) {
-                addCategory(i,optionActivite);
-            }
-            for (var i = 0; i < json.time[0].value.length; i++) {
-                $('select').formSelect();
-                var temp = $("#select" + i)[0];
-                temp.value = json.time[1].value[i];
-                for (var j = 0; j < json.time[0].value[i].length; j++) {
-                    $("#C" + i + "D" + (j + 1))[0].value = json.time[0].value[i][j];
-                }
-            }
-        }
-    };
+	newCategory() {
+		var data = {
+			id: this.currentId++,
+			days: days
+		}
 
-    function displayProject(json) {
-        if (json.projTime.length > 0) {
-            for (var i = 0; i < json.projTime.length; i++) {
-                addProject(i)
-            }
-            for (var i = 0; i < json.projTime.length; i++) {
-                for (var j = 0; j < json.projTime[i].length; j++) {
-                    $("#P" + i + "D" + (j + 1))[0].value = json.projTime[i][j];
-                }
-            }
-        }
-    };
+		var element = Utils.toElement('category-element', data);
+		$('.delete', element).click(() => element.remove());
+		$('.duplicate', element).click(() => this.duplicateCategory(element))
+		element.appendTo('#categoriesForm')
+		$('.autocomplete', element).autocomplete({
+			data: categories[this.storageService.read('language')].reduce((result, current) => {
+				result[current] = null
+				return result
+			}, {}),
+			minLength: 0,
+			dropdownOptions: { container: document.body, constrainWidth: false }
+		})
 
-    function displayLocations(json) {
-        for (var i = 0; i < days.length; i++) {
-            var temp_morn = $('#select-' + days[i] + '-morning')[0];
-            var temp_after = $('#select-' + days[i] + '-afternoon')[0];
-            temp_morn.value = json.location_morn[i];
-            temp_after.value = json.location_after[i];
-            $('select').formSelect();
-        }
-    };
+		Utils.translate(element);
+		M.updateTextFields();
+		return element
+	}
 
-    function editCatTime(catTime, catName) {
-        if (catl > 0) {
-            for (var j = 0; j < catl; j++) {
-                var CatTab = [];
-                for (var i = 1; i <= days.length; i++) {
-                    CatTab.push($("#C" + j + "D" + i)[0].value);
-                }
-                var temp = $("#select" + j)[0];
-                catName[j] = temp.options[temp.selectedIndex].value;
-                catTime[j] = CatTab;
-            }
-        }
-    };
+	duplicateCategory(element) {
+		let template = this.buildTemplate()
+		let index = element.index()
+		template.categories.splice(index + 1, 0, template.categories[index])
+		this.fillTemplateEdit(template, this.templateIndex)
+	}
 
-    function editProjectTime(projectTab) {
-        if (projl > 0) {
-            for (var j = 0; j < projl; j++) {
-                var projLine = [];
-                for (var i = 1; i <= days.length; i++) {
-                    projLine.push($("#P" + j + "D" + i)[0].value);
-                }
-                projectTab[j] = projLine;
-            }
-        }
-    };
+	emptyTemplateEdit() {
+		this.templateIndex = null
+		this.currentId = 0
+		$('#name', '#template-form').val('')
+		$('#projectForm').empty()
+		$('#categoriesForm').empty()
+		$('select', '#locationTable').val('').formSelect()
+		M.updateTextFields();
+	}
 
-    function editLocationTime(morning, afternoon) {
-        $('select').formSelect();
-        for (var i = 0; i < days.length; i++) {
-            var temp_morn = $('#select-' + days[i] + '-morning')[0];
-            var temp_after = $('#select-' + days[i] + '-afternoon')[0];
-            morning[i] = temp_morn.options[temp_morn.selectedIndex].value;
-            afternoon[i] = temp_after.options[temp_after.selectedIndex].value;
-        }
-    };
+	saveTemplate() {
+		let template = this.buildTemplate()
+		this.templateService.insertOrUpdate(this.templateIndex, template)
+		this.displayTemplates()
+	}
 
-    function runEdition(json) {
-        var templateName = $('#templateName')[0].value;
-        json.templateName = templateName;
-        editProjectTime(json.projTime);
-        editCatTime(json.time[0].value, json.time[1].value);
-        editLocationTime(json.location_morn, json.location_after);
-    };
+	buildTemplate() {
+		let template = $('#template-form').serializeObject()
+		if (template.projects) {
+			template.projects = Object.values(template.projects)
+		}
+		if (template.categories) {
+			template.categories = Object.values(template.categories)
+		}
+		return template
+	}
 
-    function deleteLineEdit(id, divId, event, json) {
-        deleteLine(id, divId, event);
-        if (id == "delete_") {
-            for (var i = 0; i < json.projTime.length; i++) {
-                if (event.target.id == id + i) {
-                    json.projTime.splice(i, 1);
-                }
-            }
-        }
-        if (id == "deleteCat") {
-            for (var i = 0; i < json.time[0].value.length; i++) {
-                if (event.target.id == id + i) {
-                    json.time[0].value.splice(i, 1);
-                    json.time[1].value.splice(i, 1);
-                }
-            }
-        }
-    };
+	editTemplate(templateIndex) {
+		let template = this.templateService.read(templateIndex)
+		this.fillTemplateEdit(template, templateIndex)
+	}
 
-    function duplicateLineEdit(id, event, json) {
-        duplicateLine(id, event);
-        if (id == "duplicate_") {
-            for (var i = 0; i < json.projTime.length; i++) {
-                if (event.target.id == id + i) {
-                    json.projTime.push(json.projTime[i]);
-                }
-            }
-        }
-        if (id == "duplicateCat") {
-            for (var i = 0; i < json.time[0].value.length; i++) {
-                if (event.target.id == id + i) {
-                    json.time[0].value.push(json.time[0].value[i]);
-                    json.time[1].value.push(json.time[1].value[i]);
-                }
-            }
-        }
-    }
+	fillTemplateEdit(template, templateIndex) {
+		this.emptyTemplateEdit();
+		this.templateIndex = templateIndex;
 
-    function editItem(param) {
-        $('#popbtn').trigger('click');
-        var tempJson = JSON.parse(localStorage.getItem(param));
-        $('#templateName')[0].value = tempJson.templateName;
-        displayProject(tempJson);
-        $('a[id^=delete_]').click(function (event) {
-            deleteLineEdit("delete_", "proj", event, tempJson);
-        });
-        $('a[id^=duplicate_]').click(function (event) {
-            duplicateLineEdit("duplicate_", event, tempJson);
-        });
-        displayCategories(tempJson);
-        $('a[id^=deleteCat]').click(function (event) {
-            deleteLineEdit("deleteCat", "cat", event, tempJson);
-        });
-        $('a[id^=duplicateCat]').click(function (event) {
-            duplicateLineEdit("duplicateCat", event, tempJson);
-        });
-        displayLocations(tempJson);
-        $('#saveBtn2').click(function () {
-            runEdition(tempJson);
-            localStorage.setItem(tempJson.id, JSON.stringify(tempJson));
-            location.reload();
-        });
-    };
+		let form = $('#template-form');
 
-    function duplicateItem(param) {
-        var tempJ = JSON.parse(localStorage.getItem(param));
-        tempJ.templateName = tempJ.templateName + "-copy";
-        id = 0;
-        while (localStorage.getItem(id) != null) {
-            id++;
-        }
-        tempJ.id = id;
-        storeJson(JSON.stringify(tempJ));
-    };
+		form.find('#name').val(template.name)
 
-});
+		if (template.projects) {
+			for (let project of template.projects) {
+				let element = this.newProject()
+				element.find('.name').val(project.name)
+				element.find('.day').each((dayIndex, input) => {
+					$(input).val(project.days[dayIndex])
+				})
+			}
+		}
+
+		if (template.categories) {
+			for (let category of template.categories) {
+				let element = this.newCategory()
+				element.find('.name').val(category.name)
+				element.find('.day').each((dayIndex, input) => {
+					$(input).val(category.days[dayIndex])
+				})
+			}
+		}
+
+		if (template.locations) {
+			if (template.locations.morning) {
+				$('.morning').each((dayIndex, input) => {
+					$(input).val(template.locations.morning[dayIndex])
+				})
+			}
+			if (template.locations.afternoon) {
+				$('.afternoon').each((dayIndex, input) => {
+					$(input).val(template.locations.afternoon[dayIndex])
+				})
+			}
+		}
+
+		M.updateTextFields();
+		form.find('select').formSelect();
+	}
+
+	duplicateTemplate(templateIndex) {
+		let template = this.templateService.read(templateIndex)
+		let name = template.name
+		let match = name.match(/\(([0-9]+)\)/)
+		if (match == null) {
+			name += " (1)"
+		} else {
+			name = name.replace(match[0], "(" + (new Number(match[1]) + 1) + ")")
+		}
+		template.name = name
+		this.templateService.insert(template)
+		this.displayTemplates()
+	}
+
+	deleteTemplate(templateIndex) {
+		this.templateService.delete(templateIndex)
+		this.displayTemplates()
+	}
+
+}
+
+let options = new Options()

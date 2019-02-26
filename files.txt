@@ -1,0 +1,11 @@
+/js/*.js
+/node_modules/jquery/dist/jquery.js
+/node_modules/materialize-css/dist/js/materialize.js
+/node_modules/mustache/mustache.js
+/html/*.html
+/css/*.css
+/node_modules/materialize-css/dist/css/materialize.css
+/node_modules/material-icons/iconfont/material-icons.css
+/img/**/*.png
+/_locales/**/*.json
+/manifest.json

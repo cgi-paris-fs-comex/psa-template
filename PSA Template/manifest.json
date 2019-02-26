@@ -1,40 +1,39 @@
 {
-  "name": "PSA Template",
-  "description": "Remplis le formulaire PSA Time",
-  "version": "1.2",
-  "manifest_version": 2,
-  "icons": {
-    "16": "img/logo/icon-16px.png",
-    "48": "img/logo/icon-48px.png",
-    "128": "img/logo/icon-128px.png"
-  },
-  "page_action": {
-    "default_icon": {
-      "19": "img/logo/icon-19px.png",
-      "38": "img/logo/icon-38px.png"
-    },
-    "default_popup": "html/popup.html",
-    "matches": [
-      "https://psa-fs.ent.cgi.com/*"
-    ]
-  },
-  "background": {
-    "scripts": [
-      "js/background.js"
-    ]
-  },
-  "options_page": "html/options.html",
-  "content_scripts": [
-    {
-      "matches": [
-        "https://psa-fs.ent.cgi.com/*"
-      ],
-      "all_frames": true,
-      "js": [
-        "js/data.js",
-        "js/jquery.js",
-        "js/page.js"
-      ]
-    }
-  ]
+	"name": "PSA Template",
+	"description": "Remplis le formulaire PSA Time",
+	"version": "1.2",
+	"manifest_version": 2,
+	"icons": {
+		"16": "img/logo/icon-16px.png",
+		"48": "img/logo/icon-48px.png",
+		"128": "img/logo/icon-128px.png"
+	},
+	"default_locale": "fr",
+	"page_action": {
+		"default_icon": {
+			"19": "img/logo/icon-19px.png",
+			"38": "img/logo/icon-38px.png"
+		},
+		"default_popup": "html/popup.html"
+	},
+	"background": {
+		"scripts": [
+			"js/background.js"
+		]
+	},
+	"options_page": "html/options.html",
+	"content_scripts": [
+		{
+			"matches": [
+				"https://psa-fs.ent.cgi.com/*"
+			],
+			"all_frames": true,
+			"js": [
+				"node_modules/jquery/dist/jquery.min.js",
+				"js/data.js",
+				"js/utils.js",
+				"js/content.js"
+			]
+		}
+	]
 }

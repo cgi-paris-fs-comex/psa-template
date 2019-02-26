@@ -40,7 +40,7 @@ class Utils {
 			}
 			let translationKey = element.data('translate')
 			let translation = Utils.getMessage(translationKey)
-			element.text(translation == null ? translationKey + ' (translation not found)' : translation)
+			element.text(translation == "" ? translationKey + ' (translation not found)' : translation)
 		})
 	}
 

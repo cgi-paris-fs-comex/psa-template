@@ -1,6 +1,21 @@
 {
-	"options.title": {
+	"optionsTitle": {
 		"message": "PSA Template - Options"
+	},
+	"projects": {
+		"message": "Projets"
+	},
+	"activities": {
+		"message": "Activités"
+	},
+	"category": {
+		"message": "Activité"
+	},
+	"save": {
+		"message": "Enregistrer"
+	},
+	"cancel": {
+		"message": "Annuler"
 	},
 	"morning": {
 		"message": "Matin"

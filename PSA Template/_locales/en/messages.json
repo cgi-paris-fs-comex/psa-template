@@ -1,0 +1,50 @@
+{
+	"optionsTitle": {
+		"message": "PSA Template - Options"
+	},
+	"projects": {
+		"message": "Projects"
+	},
+	"activities": {
+		"message": "Activities"
+	},
+	"category": {
+		"message": "Activity"
+	},
+	"save": {
+		"message": "Save"
+	},
+	"cancel": {
+		"message": "Cancel"
+	},
+	"morning": {
+		"message": "Morning"
+	},
+	"afternoon": {
+		"message": "Afternoon"
+	},
+	"name": {
+		"message": "Name"
+	},
+	"sun": {
+		"message": "Sunday"
+	},
+	"mon": {
+		"message": "Monday"
+	},
+	"tue": {
+		"message": "Tuesday"
+	},
+	"wed": {
+		"message": "Wednesday"
+	},
+	"thu": {
+		"message": "Thursday"
+	},
+	"fri": {
+		"message": "Friday"
+	},
+	"sat": {
+		"message": "Saturday"
+	}
+}

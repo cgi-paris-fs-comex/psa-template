@@ -1,6 +1,7 @@
 
 .modal {
 	height: initial;
+	width: 80%;
 	max-height: 90% !important;
 }
 .modal-content {

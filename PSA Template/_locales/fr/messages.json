@@ -2,6 +2,15 @@
 	"optionsTitle": {
 		"message": "PSA Template - Options"
 	},
+	"language": {
+		"message": "Langue dans PSA Time"
+	},
+	"fr": {
+		"message": "Français"
+	},
+	"en": {
+		"message": "Anglais"
+	},
 	"projects": {
 		"message": "Projets"
 	},

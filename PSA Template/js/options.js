@@ -1,6 +1,7 @@
 class Options {
 
 	templateService = new TemplateService()
+	storageService = new StorageService()
 	templateIndex
 	currentId = 0
 
@@ -9,17 +10,33 @@ class Options {
 	}
 
 	initialize() {
-		M.AutoInit();
-		$('.modal').modal()
+		this.initializeLanguage()
 
-		$('#addProjectBtn').click(() => this.newProject());
-		$('#addCategoriesBtn').click(() => this.newCategory());
-		$('#addTemplateBtn').click(() => this.emptyTemplateEdit());
+		$('#addProjectBtn').click(() => this.newProject())
+		$('#addCategoriesBtn').click(() => this.newCategory())
+		$('#addTemplateBtn').click(() => this.emptyTemplateEdit())
 		$('#saveTemplateBtn').click(() => this.saveTemplate())
+		$('#language').change(() => this.changeLanguage())
+
+		$('.modal').modal()
 
 		this.createLocations();
 		this.displayTemplates();
 		Utils.translate();
+		M.AutoInit();
+	}
+
+	initializeLanguage() {
+		let language = this.storageService.read('language')
+		if (language == null) {
+			language = chrome.i18n.getUILanguage().split('-')[0]
+			this.storageService.write('language', language)
+		}
+		$('#language').val(language)
+	}
+
+	changeLanguage() {
+		this.storageService.write('language', $('#language').val())
 	}
 
 	createLocations() {
@@ -82,7 +99,7 @@ class Options {
 		$('.duplicate', element).click(() => this.duplicateCategory(element))
 		element.appendTo('#categoriesForm')
 		$('.autocomplete', element).autocomplete({
-			data: categories.fr.reduce((result, current) => {
+			data: categories[this.storageService.read('language')].reduce((result, current) => {
 				result[current] = null
 				return result
 			}, {}),

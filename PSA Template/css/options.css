@@ -6,3 +6,16 @@
 .modal-content {
 	position: static !important;
 }
+
+.input-white input.select-dropdown {
+	color: #fff;
+	border-bottom: 1px solid #fff;
+}
+.input-white svg.caret {
+	fill: #fff;
+}
+
+.input-label {
+	font-size: 16px;
+	margin-top: -9px;
+}

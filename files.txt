@@ -6,6 +6,7 @@
 /css/*.css
 /node_modules/materialize-css/dist/css/materialize.css
 /node_modules/material-icons/iconfont/material-icons.css
+/node_modules/material-icons/iconfont/MaterialIcons-Regular.*
 /img/**/*.png
 /_locales/**/*.json
 /manifest.json

@@ -2,7 +2,7 @@ Add-Type -AssemblyName System.IO.Compression.FileSystem
 
 $sourceFolder = "PSA Template"
 $tempFolder = "temp"
-$targetFile = $sourceFolder + ".zip"
+$targetFile = "psa-template.zip"
 
 function Get-Files {
 	Param ([string] $path)

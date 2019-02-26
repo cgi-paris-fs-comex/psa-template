@@ -1,0 +1,59 @@
+{
+	"optionsTitle": {
+		"message": "PSA Template - Options"
+	},
+	"language": {
+		"message": "Langue dans PSA Time"
+	},
+	"fr": {
+		"message": "Français"
+	},
+	"en": {
+		"message": "Anglais"
+	},
+	"projects": {
+		"message": "Projets"
+	},
+	"activities": {
+		"message": "Activités"
+	},
+	"category": {
+		"message": "Activité"
+	},
+	"save": {
+		"message": "Enregistrer"
+	},
+	"cancel": {
+		"message": "Annuler"
+	},
+	"morning": {
+		"message": "Matin"
+	},
+	"afternoon": {
+		"message": "Après-midi"
+	},
+	"name": {
+		"message": "Nom"
+	},
+	"sun": {
+		"message": "Dimanche"
+	},
+	"mon": {
+		"message": "Lundi"
+	},
+	"tue": {
+		"message": "Mardi"
+	},
+	"wed": {
+		"message": "Mercredi"
+	},
+	"thu": {
+		"message": "Jeudi"
+	},
+	"fri": {
+		"message": "Vendredi"
+	},
+	"sat": {
+		"message": "Samedi"
+	}
+}

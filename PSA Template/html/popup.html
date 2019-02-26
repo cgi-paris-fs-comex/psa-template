@@ -2,16 +2,51 @@
 <html>
 
 <head>
-    <title>my extension</title>
-    <meta charset="utf-8">
-    <script src="../js/jquery.js"></script>
-    <script src="../js/data.js"></script>
-    <script src="../js/popup.js"></script>
+	<title>PSA Template - Popup</title>
+	<meta charset="utf-8">
+
+	<link rel="stylesheet" href="../node_modules/materialize-css/dist/css/materialize.min.css">
+	<link rel="stylesheet" href="../node_modules/material-icons/iconfont/material-icons.css">
 </head>
 
-<body>
-    <div id="savedBtn">
-    </div>
+<body style="width:400px">
+
+	<div class="navbar-fixed">
+		<nav>
+			<div class="nav-wrapper red">
+				<div class="brand-logo">PSA Template</div>
+			</div>
+		</nav>
+	</div>
+
+	<div class="row" id="templates-container">
+	</div>
+
 </body>
+
+<!-- mustache -->
+
+<script id="template-element" type="text/template">
+    <div class="col s12">
+        <div class="card blue-grey darken-1">
+            <div class="card-content white-text">
+                <span class="card-title">{{name}}</span>
+                <a class="waves-effect waves-light btn red apply"><i class="material-icons right">send</i> Appliquer</a>
+            </div>
+        </div>
+    </div>
+</script>
+
+<!-- scripts -->
+
+<script src="../node_modules/jquery/dist/jquery.min.js"></script>
+<script src="../node_modules/materialize-css/dist/js/materialize.min.js"></script>
+<script src="../node_modules/mustache/mustache.min.js"></script>
+
+<script src="../js/data.js"></script>
+<script src="../js/utils.js"></script>
+<script src="../js/storage-service.js"></script>
+<script src="../js/template-service.js"></script>
+<script src="../js/popup.js"></script>
 
 </html>
